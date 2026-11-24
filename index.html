@@ -6,63 +6,119 @@
 <meta name="theme-color" content="#205c4c">
 <title>Meu Diário de Glicemia</title>
 <style>
-:root{--g:#205c4c;--g2:#317b67;--bg:#f2f6f4;--ink:#20312b;--muted:#66776f;--line:#dce6e1;--white:#fff;--red:#b42318;--redbg:#fde8e6;--good:#23734d;--goodbg:#e3f3e8;--amber:#875b0b;--amberbg:#fff4d6}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,"Segoe UI",sans-serif}
-header{background:linear-gradient(130deg,var(--g),var(--g2));color:white;padding:22px 16px 19px}
-header h1{font-size:21px;margin:0 0 5px}header p{margin:0;color:#e3f1eb;font-size:13px}
+:root{
+  --g:#205c4c;--g2:#317b67;--bg:#f2f6f4;--ink:#20312b;--muted:#66776f;
+  --line:#dce6e1;--white:#fff;--red:#b42318;--redbg:#fde8e6;
+  --good:#23734d;--goodbg:#e3f3e8;--amber:#875b0b;--amberbg:#fff4d6;
+  --blue:#2b6cb0
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(130deg,var(--g),var(--g2));color:#fff;padding:22px 16px 19px}
+header h1{font-size:21px;margin:0 0 5px}
+header p{margin:0;color:#e3f1eb;font-size:13px}
 main{max-width:780px;margin:auto;padding:13px 12px 40px}
 .tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 1px 12px;scrollbar-width:thin}
-.tabs button,.viewtabs button{border:1px solid var(--line);background:white;color:var(--g);border-radius:22px;padding:9px 13px;white-space:nowrap;font-weight:650}
-.tabs button.active,.viewtabs button.active{background:var(--g);color:white;border-color:var(--g)}
-.card{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #173c2a0a}
+.tabs button,.viewtabs button{
+  border:1px solid var(--line);background:#fff;color:var(--g);
+  border-radius:22px;padding:9px 13px;white-space:nowrap;font-weight:650;cursor:pointer
+}
+.tabs button.active,.viewtabs button.active{background:var(--g);color:#fff;border-color:var(--g)}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #173c2a0a
+}
 .card h2{font-size:16px;margin:0 0 12px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat{background:#f5f8f6;border-radius:12px;padding:10px 7px;text-align:center}
-.stat b{display:block;font-size:20px;color:var(--g)}.stat span{font-size:11px;color:var(--muted)}
-.viewtabs{display:flex;gap:7px;margin-bottom:12px}.viewtabs button{flex:1}
+.stat b{display:block;font-size:20px;color:var(--g)}
+.stat span{font-size:11px;color:var(--muted)}
+.viewtabs{display:flex;gap:7px;margin-bottom:12px}
+.viewtabs button{flex:1}
 form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 label{font-size:12px;font-weight:700;color:#43564e;display:block;margin-bottom:5px}
-input,textarea{width:100%;border:1px solid #cbd9d2;border-radius:10px;padding:11px 10px;font:inherit;background:white;color:var(--ink);min-width:0}
+input,textarea,select{
+  width:100%;border:1px solid #cbd9d2;border-radius:10px;
+  padding:11px 10px;font:inherit;background:#fff;color:var(--ink);min-width:0
+}
+input:focus,textarea:focus,select:focus{outline:2px solid #317b6733;border-color:var(--g2)}
 textarea{grid-column:1/-1;min-height:62px;resize:vertical}
 .full{grid-column:1/-1}
-button.primary,.action{border:0;border-radius:11px;background:var(--g);color:white;padding:11px 13px;font-weight:700;font-size:14px}
-button.secondary,.action.secondary{background:#eaf2ee;color:var(--g);border:1px solid #d2e2da}
-.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button,.actions label{flex:1;text-align:center}
-.entry{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:9px;background:white}
+button.primary,.action{
+  border:0;border-radius:11px;background:var(--g);color:#fff;
+  padding:11px 13px;font-weight:700;font-size:14px;cursor:pointer
+}
+button.secondary,.action.secondary{
+  background:#eaf2ee;color:var(--g);border:1px solid #d2e2da
+}
+.range-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.range-meta{font-size:12px;color:var(--muted);background:#f5f8f6;border-radius:10px;padding:9px 11px;margin-bottom:10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions button,.actions label{flex:1;min-width:140px;text-align:center}
+.entry{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:9px;background:#fff}
 .entrytop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
-.entrytop strong{font-size:14px}.entrytop .tools{white-space:nowrap}
-.delete{border:0;background:transparent;color:var(--red);font-size:12px;padding:5px}
+.entrytop strong{font-size:14px}
+.entrytop .tools{white-space:nowrap;display:flex;gap:4px}
+.delete{border:0;background:transparent;color:var(--red);font-size:12px;font-weight:600;padding:5px 7px;border-radius:6px;cursor:pointer}
+.delete.edit-btn{color:var(--g)}
+.delete:hover{background:#f5f8f6}
 .entrygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .metric{background:#f6f8f7;border-radius:9px;padding:8px 5px;text-align:center;min-width:0}
-.metric small{display:block;color:var(--muted);font-size:10px}.metric b{font-size:15px;overflow-wrap:anywhere}
-.good{background:var(--goodbg);color:var(--good)}.bad{background:var(--redbg);color:var(--red)}
+.metric small{display:block;color:var(--muted);font-size:10px}
+.metric b{font-size:15px;overflow-wrap:anywhere}
+.good{background:var(--goodbg);color:var(--good)}
+.bad{background:var(--redbg);color:var(--red)}
 .note{font-size:12px;color:var(--muted);margin-top:8px;white-space:pre-wrap}
 .empty{text-align:center;color:var(--muted);padding:18px 8px;font-size:13px}
 .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
-.alert{padding:10px 12px;border-radius:11px;margin:8px 0;font-size:13px}
-.alert.red{background:var(--redbg);color:var(--red)}.alert.amber{background:var(--amberbg);color:var(--amber)}.alert.green{background:var(--goodbg);color:var(--good)}
+.alert{padding:10px 12px;border-radius:11px;margin:10px 0 0;font-size:13px}
+.alert.red{background:var(--redbg);color:var(--red)}
+.alert.amber{background:var(--amberbg);color:var(--amber)}
+.alert.green{background:var(--goodbg);color:var(--good)}
 .daynav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.daynav button{border:1px solid var(--line);background:#f5f8f6;border-radius:10px;padding:9px 12px;color:var(--g);font-weight:700}
+.daynav button{
+  border:1px solid var(--line);background:#f5f8f6;border-radius:10px;
+  padding:9px 12px;color:var(--g);font-weight:700;cursor:pointer
+}
 .daynav input{max-width:110px;text-align:center}
 canvas{width:100%;height:220px;display:block}
-.chartkey{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.chartkey{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.print-banner{display:none;background:#f5f8f6;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px}
 footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px}
 .hidden{display:none!important}
-@media(max-width:390px){.entrygrid{grid-template-columns:repeat(2,1fr)}.stats{gap:5px}.stat b{font-size:18px}}
-@media print{body{background:white}header,.tabs,.viewtabs,#formCard,.no-print,footer{display:none!important}main{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid;border:0}.entry{break-inside:avoid}}
+@media(max-width:520px){
+  .range-grid{grid-template-columns:1fr}
+}
+@media(max-width:390px){
+  .entrygrid{grid-template-columns:repeat(2,1fr)}
+  .stats{gap:5px}
+  .stat b{font-size:18px}
+}
+@media print{
+  body{background:#fff}
+  header,.tabs,.viewtabs,#formCard,#dailyCard,.no-print,footer{display:none!important}
+  main{max-width:none;padding:0}
+  .print-banner{display:block}
+  .card{box-shadow:none;break-inside:avoid;border:0}
+  .entry{break-inside:avoid}
+}
 </style>
-
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Diário Glicemia">
-\n</head>
+</head>
 <body>
-<header><h1>Meu Diário de Glicemia</h1><p>Histórico, gráficos e acompanhamento diário em um só lugar.</p></header>
+<header>
+  <h1>Meu Diário de Glicemia</h1>
+  <p>Histórico, gráficos e acompanhamento diário em um só lugar.</p>
+</header>
 <main>
+  <div class="print-banner" id="printBanner"></div>
   <nav class="tabs" id="tabs" aria-label="Meses"></nav>
+
   <section class="card">
     <h2 id="monthTitle">Resumo do mês</h2>
     <div class="stats">
@@ -72,24 +128,35 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
     </div>
     <div id="alerts"></div>
   </section>
+
   <div class="viewtabs no-print">
-    <button id="monthViewBtn" class="active">Visão do mês</button>
-    <button id="dayViewBtn">Dia por dia</button>
+    <button type="button" id="monthViewBtn" class="active">Visão do mês</button>
+    <button type="button" id="dayViewBtn">Dia por dia</button>
   </div>
+
   <section class="card hidden" id="dailyCard">
     <h2>Consultar um dia</h2>
     <div class="daynav">
       <button type="button" id="prevDay" aria-label="Dia anterior">‹</button>
-      <div style="flex:1"><label for="selectedDay">Dia do mês</label><input id="selectedDay" type="number" min="1" max="31" value="1"></div>
+      <div style="flex:1">
+        <label for="selectedDay">Dia do mês</label>
+        <input id="selectedDay" type="number" min="1" max="31" value="1">
+      </div>
       <button type="button" id="nextDay" aria-label="Próximo dia">›</button>
     </div>
     <div id="dayDetail"></div>
   </section>
+
   <section class="card" id="chartCard">
     <h2>Evolução no mês</h2>
-    <canvas id="chart" width="700" height="240" aria-label="Gráfico da glicemia ao longo do mês"></canvas>
-    <div class="chartkey"><span><i class="dot" style="background:#2e8067"></i>Jejum</span><span><i class="dot" style="background:#3678b8"></i>Noite</span><span>Faixa visual: 90–150 mg/dL</span></div>
+    <canvas id="chart" aria-label="Gráfico da glicemia ao longo do mês"></canvas>
+    <div class="chartkey">
+      <span><i class="dot" style="background:#2e8067"></i>Jejum</span>
+      <span><i class="dot" style="background:#3678b8"></i>Noite</span>
+      <span>Faixa visual: 90–150 mg/dL</span>
+    </div>
   </section>
+
   <section class="card" id="formCard">
     <h2 id="formTitle">Adicionar registro</h2>
     <form id="entryForm">
@@ -104,97 +171,641 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
       <button class="secondary full hidden" type="button" id="cancelEdit">Cancelar edição</button>
     </form>
   </section>
+
   <section class="card" id="listCard">
-    <h2>Registros do mês</h2>
-    <div class="legend"><span><i class="dot" style="background:#3b9b68"></i>90 a 150</span><span><i class="dot" style="background:#d0443e"></i>Abaixo de 90 ou acima de 150</span></div>
+    <h2 id="listTitle">Registros do mês</h2>
+    <div class="legend">
+      <span><i class="dot" style="background:#3b9b68"></i>90 a 150 mg/dL</span>
+      <span><i class="dot" style="background:#d0443e"></i>Abaixo de 90 ou acima de 150 mg/dL</span>
+    </div>
     <div id="entries"></div>
   </section>
-  <section class="card">
-    <h2>Relatório mensal</h2>
-    <p style="font-size:12px;color:var(--muted);margin-top:-5px">Gere uma versão para imprimir ou salvar como PDF e compartilhar com a equipe de saúde.</p>
+
+  <section class="card" id="reportCard">
+    <h2>Relatório por período</h2>
+    <p style="font-size:12px;color:var(--muted);margin-top:-5px">Separe em blocos de 10 dias para enviar ao médico ou escolha outro recorte para PDF e CSV.</p>
+    <div class="range-grid no-print">
+      <div>
+        <label for="reportScope">Período</label>
+        <select id="reportScope">
+          <option value="ten">Blocos de 10 dias (aba atual)</option>
+          <option value="month">Aba atual completa</option>
+          <option value="days">Intervalo de dias (aba atual)</option>
+          <option value="all">Todos os meses / histórico</option>
+        </select>
+      </div>
+      <div id="tenBlockBox">
+        <label for="tenBlockSelect">Bloco de 10 dias</label>
+        <select id="tenBlockSelect">
+          <option value="1">1º bloco (Dias 1 a 10)</option>
+          <option value="2">2º bloco (Dias 11 a 20)</option>
+          <option value="3">3º bloco (Dias 21 a 31)</option>
+        </select>
+      </div>
+      <div id="startDayBox" class="hidden">
+        <label for="reportStartDay">Dia inicial</label>
+        <input id="reportStartDay" type="number" min="1" max="31" value="1">
+      </div>
+      <div id="endDayBox" class="hidden">
+        <label for="reportEndDay">Dia final</label>
+        <input id="reportEndDay" type="number" min="1" max="31" value="10">
+      </div>
+    </div>
+    <div class="range-meta" id="reportSummary">Carregando período…</div>
     <div class="actions no-print">
-      <button class="action" id="reportBtn">Gerar relatório / PDF</button>
-      <button class="action secondary" id="csvBtn">Baixar CSV</button>
+      <button type="button" class="secondary" id="nextTenBtn">Próximo bloco de 10 dias</button>
+      <button type="button" class="action" id="reportBtn">Gerar relatório / PDF</button>
+      <button type="button" class="action secondary" id="csvBtn">Baixar CSV do período</button>
     </div>
   </section>
+
   <section class="card">
     <h2>Backup dos dados</h2>
     <p style="font-size:12px;color:var(--muted);margin-top:-5px">Os registros ficam salvos neste navegador/aparelho. Exporte um backup regularmente.</p>
     <div class="actions no-print">
-      <button class="action" id="exportBtn">Exportar backup</button>
+      <button type="button" class="action" id="exportBtn">Exportar backup</button>
       <label class="action secondary" style="cursor:pointer">Importar backup<input id="importFile" type="file" accept="application/json" hidden></label>
     </div>
   </section>
+
   <section class="card">
     <h2>Sobre os alertas</h2>
-    <p style="font-size:12px;color:var(--muted);margin:0">As cores e alertas seguem os limites que você pediu: verde entre 90 e 150 mg/dL; vermelho abaixo de 90 ou acima de 150 mg/dL. São referências visuais personalizadas, não diagnóstico nem alerta de emergência. Confirme suas metas com a equipe de saúde e não altere doses por conta própria.</p>
+    <p style="font-size:12px;color:var(--muted);margin:0">As cores e alertas seguem os limites configurados: verde entre 90 e 150 mg/dL; vermelho abaixo de 90 ou acima de 150 mg/dL. São referências visuais personalizadas, não diagnóstico nem alerta de emergência. Confirme suas metas com a equipe de saúde e não altere doses por conta própria.</p>
   </section>
 </main>
 <footer>Diário pessoal de acompanhamento — não substitui orientação profissional.</footer>
+
 <script>
-const months=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro","Histórico inicial"];
-const key="meuDiarioGlicemia_v1";
-const seed=[[26,139,0,142,0],[27,128,0,109,0],[28,133,0,132,0],[29,140,24,122,0],[30,122,0,136,0],[31,122,0,null,null],[1,114,0,109,0],[2,109,0,103,0],[3,114,0,104,0],[4,105,0,113,0],[5,104,0,102,0],[6,91,0,96,0],[7,94,0,91,0],[8,91,0,101,0],[9,96,0,99,0],[10,97,null,null,null]];
-let store={};try{store=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){store={}}
-if(!store["Histórico inicial"]){store["Histórico inicial"]=seed.map((x,i)=>({id:"seed"+i,day:x[0],label:"",fasting:x[1],doseAm:x[2],night:x[3],dosePm:x[4],notes:""}));persist()}
-let current="Janeiro",editing=null,view="month",daySelected=1;
-const $=id=>document.getElementById(id);
-function persist(){localStorage.setItem(key,JSON.stringify(store))}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function val(v){return v===null||v===undefined||v===""?"—":v}
-function tone(v){return v==null||v===""?"":(Number(v)<90||Number(v)>150?"bad":"good")}
-function getList(){return store[current]||[]}
-function measurements(){return getList().flatMap(x=>[{day:Number(x.day),time:"Jejum",v:x.fasting},{day:Number(x.day),time:"Noite",v:x.night}]).filter(x=>x.v!==null&&x.v!==""&&Number.isFinite(Number(x.v)))}
-function renderTabs(){$("tabs").innerHTML="";months.forEach(m=>{let b=document.createElement("button");b.textContent=m;b.className=m===current?"active":"";b.onclick=()=>{current=m;editing=null;resetForm();daySelected=1;$("selectedDay").value=1;render()};$("tabs").appendChild(b)})}
-function renderSummary(){
- const l=getList(),f=l.filter(x=>x.fasting!==null&&x.fasting!=="").map(x=>Number(x.fasting)),n=l.filter(x=>x.night!==null&&x.night!=="").map(x=>Number(x.night));
- const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length).toFixed(1):"—";
- $("avgFast").textContent=avg(f);$("avgNight").textContent=avg(n);$("count").textContent=f.length+n.length;
- $("monthTitle").textContent=current==="Histórico inicial"?"Resumo dos registros transcritos":`Resumo — ${current}`;
- const alerts=measurements().filter(x=>Number(x.v)<90||Number(x.v)>150);
- $("alerts").innerHTML=alerts.length?`<div class="alert red"><b>${alerts.length} medição(ões) fora da faixa visual escolhida.</b> Confira os valores registrados e converse com sua equipe de saúde sobre padrões recorrentes.</div>`:'<div class="alert green">Nenhuma medição fora da faixa visual escolhida neste mês.</div>';
+const months = [
+  "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
+  "Histórico inicial"
+];
+const STORAGE_KEY = "meuDiarioGlicemia_v1";
+const seed = [
+  [26,139,0,142,0],[27,128,0,109,0],[28,133,0,132,0],[29,140,24,122,0],
+  [30,122,0,136,0],[31,122,0,null,null],[1,114,0,109,0],[2,109,0,103,0],
+  [3,114,0,104,0],[4,105,0,113,0],[5,104,0,102,0],[6,91,0,96,0],
+  [7,94,0,91,0],[8,91,0,101,0],[9,96,0,99,0],[10,97,null,null,null]
+];
+
+let store = {};
+try { store = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+catch { store = {}; }
+
+if (!store["Histórico inicial"]) {
+  store["Histórico inicial"] = seed.map((x, i) => ({
+    id: "seed" + i, day: x[0], label: "", fasting: x[1],
+    doseAm: x[2], night: x[3], dosePm: x[4], notes: ""
+  }));
+  persist();
 }
-function renderEntries(){
- const host=$("entries");host.innerHTML="";const l=[...getList()].sort((a,b)=>Number(a.day)-Number(b.day));
- if(!l.length){host.innerHTML='<div class="empty">Nenhum registro neste mês. Preencha o formulário acima para começar.</div>';return}
- l.forEach(x=>{const el=document.createElement("article");el.className="entry";el.innerHTML=`<div class="entrytop"><strong>Dia ${esc(x.day)} ${x.label?"· "+esc(x.label):""}</strong><span class="tools"><button class="delete" data-edit="${esc(x.id)}">Editar</button><button class="delete" data-del="${esc(x.id)}">Excluir</button></span></div><div class="entrygrid"><div class="metric ${tone(x.fasting)}"><small>Jejum</small><b>${val(x.fasting)}</b></div><div class="metric"><small>Dose manhã</small><b>${val(x.doseAm)}</b></div><div class="metric ${tone(x.night)}"><small>Noite</small><b>${val(x.night)}</b></div><div class="metric"><small>Dose noite</small><b>${val(x.dosePm)}</b></div></div>${x.notes?`<div class="note">${esc(x.notes)}</div>`:""}`;host.appendChild(el)});
- host.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));
- host.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(confirm("Excluir este registro?")){store[current]=(store[current]||[]).filter(x=>x.id!==b.dataset.del);persist();render()}});
+
+let current = "Janeiro", editing = null, view = "month", daySelected = 1;
+let reportScope = "ten", tenBlock = 1, reportStartDay = 1, reportEndDay = 10;
+let reportOverrideActive = false;
+
+const $ = id => document.getElementById(id);
+
+function persist() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
+  catch (err) { console.warn("Falha ao salvar no localStorage:", err); }
 }
-function renderDay(){
- $("selectedDay").value=daySelected;
- const x=getList().find(x=>Number(x.day)===Number(daySelected));
- if(!x){$("dayDetail").innerHTML='<div class="empty">Nenhum registro para este dia. Você pode adicioná-lo no formulário abaixo.</div>';return}
- $("dayDetail").innerHTML=`<article class="entry"><div class="entrytop"><strong>Dia ${esc(x.day)} ${x.label?"· "+esc(x.label):""}</strong><button class="delete" id="dayEdit">Editar este dia</button></div><div class="entrygrid"><div class="metric ${tone(x.fasting)}"><small>Jejum</small><b>${val(x.fasting)}</b></div><div class="metric"><small>Dose manhã</small><b>${val(x.doseAm)}</b></div><div class="metric ${tone(x.night)}"><small>Noite</small><b>${val(x.night)}</b></div><div class="metric"><small>Dose noite</small><b>${val(x.dosePm)}</b></div></div>${x.notes?`<div class="note">${esc(x.notes)}</div>`:""}</article>`;
- $("dayEdit").onclick=()=>editEntry(x.id);
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
 }
-function renderChart(){
- const c=$("chart"),ctx=c.getContext("2d"),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
- const vals=measurements(),maxDay=Math.max(31,...vals.map(x=>x.day)),pad={l:38,r:12,t:16,b:28};
- const yMin=50,yMax=250,px=d=>pad.l+(d-1)/(maxDay-1)*(w-pad.l-pad.r),py=v=>pad.t+(yMax-v)/(yMax-yMin)*(h-pad.t-pad.b);
- ctx.font="11px system-ui";ctx.strokeStyle="#e2e9e5";ctx.fillStyle="#65756f";ctx.lineWidth=1;
- [50,90,150,200,250].forEach(v=>{let y=py(v);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText(v,y<25?y+10:y-3,12)});
- // faixa escolhida
- ctx.fillStyle="#e3f3e8";ctx.fillRect(pad.l,py(150),w-pad.l-pad.r,py(90)-py(150));
- [1,5,10,15,20,25,31].forEach(d=>{let x=px(d);ctx.fillStyle="#65756f";ctx.fillText(d,x-4,h-8)});
- [["fasting","#2e8067"],["night","#3678b8"]].forEach(([field,color])=>{let pts=getList().filter(x=>x[field]!==null&&x[field]!==""&&Number.isFinite(Number(x[field]))).sort((a,b)=>a.day-b.day);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;ctx.beginPath();pts.forEach((x,i)=>{let xx=px(Number(x.day)),yy=py(Number(x[field]));if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)});ctx.stroke();pts.forEach(x=>{ctx.beginPath();ctx.arc(px(Number(x.day)),py(Number(x[field])),3.5,0,Math.PI*2);ctx.fill()})});
- if(!vals.length){ctx.fillStyle="#65756f";ctx.textAlign="center";ctx.fillText("Adicione medições para visualizar a evolução",w/2,h/2);ctx.textAlign="left"}
+
+function val(v) {
+  return v === null || v === undefined || v === "" ? "—" : v;
 }
-function render(){renderTabs();renderSummary();renderEntries();renderDay();renderChart();$("dailyCard").classList.toggle("hidden",view!=="day");$("chartCard").classList.toggle("hidden",view==="day");$("listCard").classList.toggle("hidden",view==="day");$("monthViewBtn").classList.toggle("active",view==="month");$("dayViewBtn").classList.toggle("active",view==="day")}
-function resetForm(){$("entryForm").reset();editing=null;$("formTitle").textContent="Adicionar registro";$("saveBtn").textContent="Salvar registro";$("cancelEdit").classList.add("hidden")}
-function editEntry(id){let x=getList().find(x=>x.id===id);if(!x)return;editing=id;["day","dateLabel","fasting","doseAm","night","dosePm","notes"].forEach((f,i)=>$(f).value=[x.day,x.label,x.fasting,x.doseAm,x.night,x.dosePm,x.notes][i]??"");$("formTitle").textContent="Editar registro";$("saveBtn").textContent="Salvar alterações";$("cancelEdit").classList.remove("hidden");$("formCard").scrollIntoView({behavior:"smooth",block:"start"})}
-$("monthViewBtn").onclick=()=>{view="month";render()};
-$("dayViewBtn").onclick=()=>{view="day";render()};
-$("selectedDay").onchange=()=>{daySelected=Math.min(31,Math.max(1,Number($("selectedDay").value)||1));renderDay()};
-$("prevDay").onclick=()=>{daySelected=Math.max(1,daySelected-1);renderDay()};
-$("nextDay").onclick=()=>{daySelected=Math.min(31,daySelected+1);renderDay()};
-$("cancelEdit").onclick=resetForm;
-$("entryForm").onsubmit=e=>{e.preventDefault();const entry={id:editing||("id"+Date.now()),day:Number($("day").value),label:$("dateLabel").value.trim(),fasting:$("fasting").value===""?null:Number($("fasting").value),doseAm:$("doseAm").value===""?null:Number($("doseAm").value),night:$("night").value===""?null:Number($("night").value),dosePm:$("dosePm").value===""?null:Number($("dosePm").value),notes:$("notes").value.trim()};if(entry.day<1||entry.day>31){alert("Informe um dia entre 1 e 31.");return}store[current]=store[current]||[];if(editing){store[current]=store[current].map(x=>x.id===editing?entry:x)}else{store[current]=store[current].filter(x=>Number(x.day)!==entry.day);store[current].push(entry)}daySelected=entry.day;persist();resetForm();render();};
-function download(name,data,type){const a=document.createElement("a"),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
-$("exportBtn").onclick=()=>download("backup_diario_glicemia.json",JSON.stringify(store,null,2),"application/json");
-$("csvBtn").onclick=()=>{let lines=[["Mês","Dia","Identificação","Jejum mg/dL","Dose manhã","Noite mg/dL","Dose noite","Observações"]];months.forEach(m=>(store[m]||[]).forEach(x=>lines.push([m,x.day,x.label,x.fasting,x.doseAm,x.night,x.dosePm,x.notes])));download("registros_glicemia.csv","\ufeff"+lines.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\n"),"text/csv;charset=utf-8")};
-$("reportBtn").onclick=()=>{view="month";render();window.print()};
-$("importFile").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(!obj||typeof obj!=="object")throw 0;if(!confirm("Importar este backup e substituir os dados atuais neste aparelho?"))return;store=obj;persist();render();alert("Backup importado.")}catch(err){alert("Não foi possível ler esse backup.")}e.target.value=""};
+
+function hasNum(v) {
+  return v !== null && v !== undefined && v !== "" && Number.isFinite(Number(v));
+}
+
+function isOutOfRange(v) {
+  return hasNum(v) && (Number(v) < 90 || Number(v) > 150);
+}
+
+function tone(v) {
+  if (!hasNum(v)) return "";
+  return isOutOfRange(v) ? "bad" : "good";
+}
+
+function sortOrderForMonth(monthName, day) {
+  const d = Number(day);
+  if (monthName === "Histórico inicial") {
+    return d >= 20 ? d - 31 : d;
+  }
+  return d;
+}
+
+function getList(monthName = current) {
+  return Array.isArray(store[monthName]) ? store[monthName] : [];
+}
+
+function sortedList(monthName = current) {
+  return [...getList(monthName)].sort((a, b) =>
+    sortOrderForMonth(monthName, a.day) - sortOrderForMonth(monthName, b.day)
+  );
+}
+
+function measurementsFrom(items) {
+  return items.flatMap(x => [
+    { day: Number(x.day), time: "Jejum", v: x.fasting },
+    { day: Number(x.day), time: "Noite", v: x.night }
+  ]).filter(x => hasNum(x.v));
+}
+
+function measurements() {
+  return measurementsFrom(getList());
+}
+
+function clampDay(v, fallback = 1) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.min(31, Math.max(1, Math.round(n)));
+}
+
+function getTenRange(blockNum) {
+  const b = Math.min(3, Math.max(1, Number(blockNum) || 1));
+  if (b === 1) return { block: 1, start: 1, end: 10, name: "1º bloco (Dias 1 a 10)" };
+  if (b === 2) return { block: 2, start: 11, end: 20, name: "2º bloco (Dias 11 a 20)" };
+  return { block: 3, start: 21, end: 31, name: "3º bloco (Dias 21 a 31)" };
+}
+
+function filterByDayRange(items, start, end) {
+  const ordered = sortedList(current);
+  const s = clampDay(start, 1);
+  const e = clampDay(end, 31);
+
+  if (current === "Histórico inicial") {
+    const sOrd = sortOrderForMonth(current, s);
+    const eOrd = sortOrderForMonth(current, e);
+    const minOrd = Math.min(sOrd, eOrd);
+    const maxOrd = Math.max(sOrd, eOrd);
+    return ordered.filter(item => {
+      const ord = sortOrderForMonth(current, item.day);
+      return ord >= minOrd && ord <= maxOrd;
+    });
+  }
+
+  const minD = Math.min(s, e);
+  const maxD = Math.max(s, e);
+  return ordered.filter(item => Number(item.day) >= minD && Number(item.day) <= maxD);
+}
+
+function getReportSelection() {
+  if (reportScope === "all") {
+    const rows = [];
+    months.forEach(m => {
+      sortedList(m).forEach(item => rows.push({ month: m, ...item }));
+    });
+    return {
+      label: "Todos os meses e histórico inicial",
+      fileSlug: "completo",
+      rows
+    };
+  }
+
+  if (reportScope === "ten") {
+    const tr = getTenRange(tenBlock);
+    const filtered = filterByDayRange(getList(current), tr.start, tr.end);
+    return {
+      label: `${current} · ${tr.name}`,
+      fileSlug: `${current}_bloco10_${tr.start}-${tr.end}`.toLowerCase().replace(/[^a-z0-9_-]+/g, "_"),
+      rows: filtered.map(item => ({ month: current, ...item }))
+    };
+  }
+
+  if (reportScope === "days") {
+    const start = clampDay(reportStartDay, 1);
+    const end = clampDay(reportEndDay, 31);
+    const filtered = filterByDayRange(getList(current), start, end);
+    const rangeText = start === end ? `Dia ${start}` : `Dias ${start} a ${end}`;
+    return {
+      label: `${current} (${rangeText})`,
+      fileSlug: `${current}_${start}-${end}`.toLowerCase().replace(/[^a-z0-9_-]+/g, "_"),
+      rows: filtered.map(item => ({ month: current, ...item }))
+    };
+  }
+
+  return {
+    label: current,
+    fileSlug: current.toLowerCase().replace(/[^a-z0-9_-]+/g, "_"),
+    rows: sortedList(current).map(item => ({ month: current, ...item }))
+  };
+}
+
+function renderTabs() {
+  $("tabs").innerHTML = "";
+  months.forEach(m => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = m;
+    b.className = m === current ? "active" : "";
+    b.onclick = () => {
+      current = m;
+      editing = null;
+      resetForm();
+      daySelected = 1;
+      $("selectedDay").value = 1;
+      render();
+    };
+    $("tabs").appendChild(b);
+  });
+}
+
+function renderSummary() {
+  const l = getList();
+  const f = l.filter(x => hasNum(x.fasting)).map(x => Number(x.fasting));
+  const n = l.filter(x => hasNum(x.night)).map(x => Number(x.night));
+  const avg = a => a.length ? (a.reduce((s, x) => s + x, 0) / a.length).toFixed(1) : "—";
+
+  $("avgFast").textContent = avg(f);
+  $("avgNight").textContent = avg(n);
+  $("count").textContent = f.length + n.length;
+  $("monthTitle").textContent = current === "Histórico inicial"
+    ? "Resumo dos registros transcritos"
+    : `Resumo — ${current}`;
+
+  const all = measurements();
+  const low = all.filter(x => Number(x.v) < 90).length;
+  const high = all.filter(x => Number(x.v) > 150).length;
+  const totalOut = low + high;
+
+  if (!totalOut) {
+    $("alerts").innerHTML = '<div class="alert green">Nenhuma medição fora da faixa visual escolhida (90–150 mg/dL) neste período.</div>';
+    return;
+  }
+
+  const parts = [];
+  if (low) parts.push(`${low} abaixo de 90 mg/dL`);
+  if (high) parts.push(`${high} acima de 150 mg/dL`);
+
+  $("alerts").innerHTML = `<div class="alert red"><b>${totalOut} medição(ões) fora da faixa visual (${parts.join(" e ")}).</b> Confira os valores e converse com sua equipe de saúde sobre padrões recorrentes.</div>`;
+}
+
+function entryCardHTML(x, opts = {}) {
+  const { isDaily = false, showMonth = false } = opts;
+  const prefix = showMonth ? `${esc(x.month)} · ` : "";
+  const title = `${prefix}Dia ${esc(x.day)}${x.label ? " · " + esc(x.label) : ""}`;
+  const tools = isDaily
+    ? `<button type="button" class="delete edit-btn" id="dayEdit">Editar este dia</button>`
+    : `<span class="tools">
+         <button type="button" class="delete edit-btn" data-edit="${esc(x.id)}">Editar</button>
+         <button type="button" class="delete" data-del="${esc(x.id)}">Excluir</button>
+       </span>`;
+
+  return `<article class="entry">
+    <div class="entrytop"><strong>${title}</strong>${tools}</div>
+    <div class="entrygrid">
+      <div class="metric ${tone(x.fasting)}"><small>Jejum</small><b>${val(x.fasting)}</b></div>
+      <div class="metric"><small>Dose manhã</small><b>${val(x.doseAm)}</b></div>
+      <div class="metric ${tone(x.night)}"><small>Noite</small><b>${val(x.night)}</b></div>
+      <div class="metric"><small>Dose noite</small><b>${val(x.dosePm)}</b></div>
+    </div>
+    ${x.notes ? `<div class="note">${esc(x.notes)}</div>` : ""}
+  </article>`;
+}
+
+function renderEntries() {
+  const host = $("entries");
+  host.innerHTML = "";
+
+  const useReportSlice = reportOverrideActive;
+  const sel = getReportSelection();
+  const l = useReportSlice ? sel.rows : sortedList(current);
+
+  $("listTitle").textContent = useReportSlice
+    ? `Registros do relatório — ${sel.label}`
+    : "Registros do mês";
+
+  if (!l.length) {
+    host.innerHTML = '<div class="empty">Nenhum registro encontrado para este filtro. Preencha o formulário acima para adicionar.</div>';
+    return;
+  }
+
+  l.forEach(x => {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = entryCardHTML(x, { isDaily: false, showMonth: useReportSlice && reportScope === "all" });
+    host.appendChild(wrap.firstElementChild);
+  });
+
+  host.querySelectorAll("[data-edit]").forEach(b => {
+    b.onclick = () => editEntry(b.dataset.edit);
+  });
+
+  host.querySelectorAll("[data-del]").forEach(b => {
+    b.onclick = () => {
+      if (confirm("Excluir este registro?")) {
+        const targetMonth = useReportSlice && reportScope === "all"
+          ? months.find(m => getList(m).some(item => item.id === b.dataset.del)) || current
+          : current;
+        store[targetMonth] = getList(targetMonth).filter(x => x.id !== b.dataset.del);
+        persist();
+        render();
+      }
+    };
+  });
+}
+
+function renderReportControls() {
+  const isTen = reportScope === "ten";
+  const isDays = reportScope === "days";
+  $("reportScope").value = reportScope;
+  $("tenBlockBox").classList.toggle("hidden", !isTen);
+  $("nextTenBtn").classList.toggle("hidden", !isTen);
+  $("startDayBox").classList.toggle("hidden", !isDays);
+  $("endDayBox").classList.toggle("hidden", !isDays);
+  $("tenBlockSelect").value = String(tenBlock);
+  $("reportStartDay").value = reportStartDay;
+  $("reportEndDay").value = reportEndDay;
+
+  const sel = getReportSelection();
+  const m = measurementsFrom(sel.rows);
+  const f = m.filter(x => x.time === "Jejum").map(x => Number(x.v));
+  const n = m.filter(x => x.time === "Noite").map(x => Number(x.v));
+  const avg = a => a.length ? (a.reduce((s, x) => s + x, 0) / a.length).toFixed(1) : "—";
+
+  $("reportSummary").innerHTML =
+    `<b>Período selecionado:</b> ${esc(sel.label)} · ` +
+    `<b>${sel.rows.length}</b> dia(s) · ` +
+    `<b>${m.length}</b> medição(ões) ` +
+    `(Média jejum: <b>${avg(f)}</b> · Média noite: <b>${avg(n)}</b>)`;
+
+  $("printBanner").innerHTML =
+    `<b>Relatório de Glicemia</b> — Período: ${esc(sel.label)} · ` +
+    `Registros: ${sel.rows.length} · Medições: ${m.length} · ` +
+    `Média jejum: ${avg(f)} mg/dL · Média noite: ${avg(n)} mg/dL`;
+}
+
+function renderDay() {
+  $("selectedDay").value = daySelected;
+  const x = getList().find(item => Number(item.day) === Number(daySelected));
+  if (!x) {
+    $("dayDetail").innerHTML = '<div class="empty">Nenhum registro para este dia. Você pode adicioná-lo no formulário abaixo.</div>';
+    return;
+  }
+  $("dayDetail").innerHTML = entryCardHTML(x, { isDaily: true, showMonth: false });
+  $("dayEdit").onclick = () => editEntry(x.id);
+}
+
+function renderChart() {
+  const c = $("chart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.getBoundingClientRect();
+  const cssW = Math.max(280, Math.floor(rect.width || 700));
+  const cssH = 220;
+
+  if (c.width !== cssW * dpr || c.height !== cssH * dpr) {
+    c.width = cssW * dpr;
+    c.height = cssH * dpr;
+  }
+
+  const ctx = c.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const vals = measurements();
+  const maxDay = Math.max(31, ...vals.map(x => x.day));
+  const pad = { l: 38, r: 12, t: 16, b: 28 };
+  const yMin = 50, yMax = 250;
+  const px = d => pad.l + (d - 1) / Math.max(1, maxDay - 1) * (cssW - pad.l - pad.r);
+  const py = v => pad.t + (yMax - v) / (yMax - yMin) * (cssH - pad.t - pad.b);
+
+  ctx.font = "11px system-ui";
+  ctx.lineWidth = 1;
+
+  ctx.fillStyle = "#e3f3e8";
+  ctx.fillRect(pad.l, py(150), cssW - pad.l - pad.r, py(90) - py(150));
+
+  [50, 90, 150, 200, 250].forEach(v => {
+    const y = py(v);
+    ctx.strokeStyle = v === 90 || v === 150 ? "#b8d8c4" : "#e2e9e5";
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(cssW - pad.r, y);
+    ctx.stroke();
+
+    ctx.fillStyle = "#65756f";
+    ctx.fillText(v, 4, y + 4);
+  });
+
+  [1, 5, 10, 15, 20, 25, 31].forEach(d => {
+    if (d > maxDay) return;
+    const x = px(d);
+    ctx.fillStyle = "#65756f";
+    ctx.fillText(d, x - 4, cssH - 8);
+  });
+
+  [["fasting", "#2e8067"], ["night", "#3678b8"]].forEach(([field, color]) => {
+    const pts = getList()
+      .filter(x => hasNum(x[field]))
+      .sort((a, b) => Number(a.day) - Number(b.day));
+
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    pts.forEach((x, i) => {
+      const xx = px(Number(x.day));
+      const yy = py(Number(x[field]));
+      if (i === 0) ctx.moveTo(xx, yy);
+      else ctx.lineTo(xx, yy);
+    });
+    ctx.stroke();
+
+    pts.forEach(x => {
+      ctx.beginPath();
+      ctx.arc(px(Number(x.day)), py(Number(x[field])), 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  });
+
+  if (!vals.length) {
+    ctx.fillStyle = "#65756f";
+    ctx.textAlign = "center";
+    ctx.fillText("Adicione medições para visualizar a evolução", cssW / 2, cssH / 2);
+    ctx.textAlign = "left";
+  }
+}
+
+function render() {
+  renderTabs();
+  renderSummary();
+  renderReportControls();
+  renderEntries();
+  renderDay();
+  renderChart();
+  $("dailyCard").classList.toggle("hidden", view !== "day");
+  $("chartCard").classList.toggle("hidden", view === "day");
+  $("listCard").classList.toggle("hidden", view === "day");
+  $("monthViewBtn").classList.toggle("active", view === "month");
+  $("dayViewBtn").classList.toggle("active", view === "day");
+}
+
+function resetForm() {
+  $("entryForm").reset();
+  editing = null;
+  $("formTitle").textContent = "Adicionar registro";
+  $("saveBtn").textContent = "Salvar registro";
+  $("cancelEdit").classList.add("hidden");
+}
+
+function editEntry(id) {
+  let targetMonth = current;
+  let x = getList(current).find(item => item.id === id);
+  if (!x) {
+    for (const m of months) {
+      const found = getList(m).find(item => item.id === id);
+      if (found) { x = found; targetMonth = m; break; }
+    }
+  }
+  if (!x) return;
+  if (targetMonth !== current) current = targetMonth;
+
+  editing = id;
+  const fields = ["day", "dateLabel", "fasting", "doseAm", "night", "dosePm", "notes"];
+  const values = [x.day, x.label, x.fasting, x.doseAm, x.night, x.dosePm, x.notes];
+  fields.forEach((f, i) => { $(f).value = values[i] ?? ""; });
+  $("formTitle").textContent = "Editar registro";
+  $("saveBtn").textContent = "Salvar alterações";
+  $("cancelEdit").classList.remove("hidden");
+  $("formCard").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+$("monthViewBtn").onclick = () => { view = "month"; render(); };
+$("dayViewBtn").onclick = () => { view = "day"; render(); };
+$("selectedDay").onchange = () => {
+  daySelected = clampDay($("selectedDay").value, 1);
+  renderDay();
+};
+$("prevDay").onclick = () => { daySelected = Math.max(1, daySelected - 1); renderDay(); };
+$("nextDay").onclick = () => { daySelected = Math.min(31, daySelected + 1); renderDay(); };
+$("cancelEdit").onclick = resetForm;
+
+$("reportScope").onchange = () => {
+  reportScope = $("reportScope").value;
+  reportOverrideActive = false;
+  renderReportControls();
+  renderEntries();
+};
+
+$("tenBlockSelect").onchange = () => {
+  tenBlock = Math.min(3, Math.max(1, Number($("tenBlockSelect").value) || 1));
+  renderReportControls();
+  if (reportOverrideActive) renderEntries();
+};
+
+$("nextTenBtn").onclick = () => {
+  reportScope = "ten";
+  tenBlock = tenBlock >= 3 ? 1 : tenBlock + 1;
+  renderReportControls();
+  if (reportOverrideActive) renderEntries();
+};
+
+$("reportStartDay").onchange = () => {
+  reportStartDay = clampDay($("reportStartDay").value, 1);
+  renderReportControls();
+  if (reportOverrideActive) renderEntries();
+};
+
+$("reportEndDay").onchange = () => {
+  reportEndDay = clampDay($("reportEndDay").value, 10);
+  renderReportControls();
+  if (reportOverrideActive) renderEntries();
+};
+
+$("entryForm").onsubmit = e => {
+  e.preventDefault();
+  const entry = {
+    id: editing || ("id" + Date.now()),
+    day: Number($("day").value),
+    label: $("dateLabel").value.trim(),
+    fasting: $("fasting").value === "" ? null : Number($("fasting").value),
+    doseAm: $("doseAm").value === "" ? null : Number($("doseAm").value),
+    night: $("night").value === "" ? null : Number($("night").value),
+    dosePm: $("dosePm").value === "" ? null : Number($("dosePm").value),
+    notes: $("notes").value.trim()
+  };
+
+  if (!Number.isInteger(entry.day) || entry.day < 1 || entry.day > 31) {
+    alert("Informe um dia entre 1 e 31.");
+    return;
+  }
+
+  store[current] = getList();
+  if (editing) {
+    store[current] = store[current].map(x => x.id === editing ? entry : x);
+  } else {
+    store[current] = store[current].filter(x => Number(x.day) !== entry.day);
+    store[current].push(entry);
+  }
+
+  daySelected = entry.day;
+  persist();
+  resetForm();
+  render();
+};
+
+function download(name, data, type) {
+  const a = document.createElement("a");
+  const u = URL.createObjectURL(new Blob([data], { type }));
+  a.href = u;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(u), 1000);
+}
+
+$("exportBtn").onclick = () =>
+  download("backup_diario_glicemia.json", JSON.stringify(store, null, 2), "application/json");
+
+$("csvBtn").onclick = () => {
+  const sel = getReportSelection();
+  const lines = [["Mês","Dia","Identificação","Jejum mg/dL","Dose manhã","Noite mg/dL","Dose noite","Observações"]];
+  sel.rows.forEach(x =>
+    lines.push([x.month, x.day, x.label, x.fasting, x.doseAm, x.night, x.dosePm, x.notes])
+  );
+  download(
+    `registros_glicemia_${sel.fileSlug}.csv`,
+    "\ufeff" + lines.map(r => r.map(v => '"' + String(v ?? "").replace(/"/g, '""') + '"').join(";")).join("\n"),
+    "text/csv;charset=utf-8"
+  );
+};
+
+$("reportBtn").onclick = () => {
+  view = "month";
+  reportOverrideActive = true;
+  render();
+  setTimeout(() => {
+    window.print();
+    reportOverrideActive = false;
+    renderEntries();
+  }, 60);
+};
+
+$("importFile").onchange = async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const obj = JSON.parse(await f.text());
+    if (!obj || typeof obj !== "object" || Array.isArray(obj)) throw new Error("Formato inválido");
+    if (!confirm("Importar este backup e substituir os dados atuais neste aparelho?")) return;
+    store = obj;
+    persist();
+    render();
+    alert("Backup importado.");
+  } catch {
+    alert("Não foi possível ler esse backup.");
+  }
+  e.target.value = "";
+};
+
+window.addEventListener("resize", renderChart);
 render();
 </script>
 
@@ -205,5 +816,5 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   });
 }
 </script>
-\n</body>
+</body>
 </html>
