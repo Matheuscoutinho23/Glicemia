@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#205c4c">
+<title>Meu Diário de Glicemia</title>
+<style>
+:root{--g:#205c4c;--g2:#317b67;--bg:#f2f6f4;--ink:#20312b;--muted:#66776f;--line:#dce6e1;--white:#fff;--red:#b42318;--redbg:#fde8e6;--good:#23734d;--goodbg:#e3f3e8;--amber:#875b0b;--amberbg:#fff4d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(130deg,var(--g),var(--g2));color:white;padding:22px 16px 19px}
+header h1{font-size:21px;margin:0 0 5px}header p{margin:0;color:#e3f1eb;font-size:13px}
+main{max-width:780px;margin:auto;padding:13px 12px 40px}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 1px 12px;scrollbar-width:thin}
+.tabs button,.viewtabs button{border:1px solid var(--line);background:white;color:var(--g);border-radius:22px;padding:9px 13px;white-space:nowrap;font-weight:650}
+.tabs button.active,.viewtabs button.active{background:var(--g);color:white;border-color:var(--g)}
+.card{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #173c2a0a}
+.card h2{font-size:16px;margin:0 0 12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#f5f8f6;border-radius:12px;padding:10px 7px;text-align:center}
+.stat b{display:block;font-size:20px;color:var(--g)}.stat span{font-size:11px;color:var(--muted)}
+.viewtabs{display:flex;gap:7px;margin-bottom:12px}.viewtabs button{flex:1}
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+label{font-size:12px;font-weight:700;color:#43564e;display:block;margin-bottom:5px}
+input,textarea{width:100%;border:1px solid #cbd9d2;border-radius:10px;padding:11px 10px;font:inherit;background:white;color:var(--ink);min-width:0}
+textarea{grid-column:1/-1;min-height:62px;resize:vertical}
+.full{grid-column:1/-1}
+button.primary,.action{border:0;border-radius:11px;background:var(--g);color:white;padding:11px 13px;font-weight:700;font-size:14px}
+button.secondary,.action.secondary{background:#eaf2ee;color:var(--g);border:1px solid #d2e2da}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button,.actions label{flex:1;text-align:center}
+.entry{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:9px;background:white}
+.entrytop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
+.entrytop strong{font-size:14px}.entrytop .tools{white-space:nowrap}
+.delete{border:0;background:transparent;color:var(--red);font-size:12px;padding:5px}
+.entrygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.metric{background:#f6f8f7;border-radius:9px;padding:8px 5px;text-align:center;min-width:0}
+.metric small{display:block;color:var(--muted);font-size:10px}.metric b{font-size:15px;overflow-wrap:anywhere}
+.good{background:var(--goodbg);color:var(--good)}.bad{background:var(--redbg);color:var(--red)}
+.note{font-size:12px;color:var(--muted);margin-top:8px;white-space:pre-wrap}
+.empty{text-align:center;color:var(--muted);padding:18px 8px;font-size:13px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.alert{padding:10px 12px;border-radius:11px;margin:8px 0;font-size:13px}
+.alert.red{background:var(--redbg);color:var(--red)}.alert.amber{background:var(--amberbg);color:var(--amber)}.alert.green{background:var(--goodbg);color:var(--good)}
+.daynav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.daynav button{border:1px solid var(--line);background:#f5f8f6;border-radius:10px;padding:9px 12px;color:var(--g);font-weight:700}
+.daynav input{max-width:110px;text-align:center}
+canvas{width:100%;height:220px;display:block}
+.chartkey{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px}
+.hidden{display:none!important}
+@media(max-width:390px){.entrygrid{grid-template-columns:repeat(2,1fr)}.stats{gap:5px}.stat b{font-size:18px}}
+@media print{body{background:white}header,.tabs,.viewtabs,#formCard,.no-print,footer{display:none!important}main{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid;border:0}.entry{break-inside:avoid}}
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Diário Glicemia">
+\n</head>
+<body>
+<header><h1>Meu Diário de Glicemia</h1><p>Histórico, gráficos e acompanhamento diário em um só lugar.</p></header>
+<main>
+  <nav class="tabs" id="tabs" aria-label="Meses"></nav>
+  <section class="card">
+    <h2 id="monthTitle">Resumo do mês</h2>
+    <div class="stats">
+      <div class="stat"><b id="avgFast">—</b><span>Média jejum</span></div>
+      <div class="stat"><b id="avgNight">—</b><span>Média noite</span></div>
+      <div class="stat"><b id="count">0</b><span>Medições</span></div>
+    </div>
+    <div id="alerts"></div>
+  </section>
+  <div class="viewtabs no-print">
+    <button id="monthViewBtn" class="active">Visão do mês</button>
+    <button id="dayViewBtn">Dia por dia</button>
+  </div>
+  <section class="card hidden" id="dailyCard">
+    <h2>Consultar um dia</h2>
+    <div class="daynav">
+      <button type="button" id="prevDay" aria-label="Dia anterior">‹</button>
+      <div style="flex:1"><label for="selectedDay">Dia do mês</label><input id="selectedDay" type="number" min="1" max="31" value="1"></div>
+      <button type="button" id="nextDay" aria-label="Próximo dia">›</button>
+    </div>
+    <div id="dayDetail"></div>
+  </section>
+  <section class="card" id="chartCard">
+    <h2>Evolução no mês</h2>
+    <canvas id="chart" width="700" height="240" aria-label="Gráfico da glicemia ao longo do mês"></canvas>
+    <div class="chartkey"><span><i class="dot" style="background:#2e8067"></i>Jejum</span><span><i class="dot" style="background:#3678b8"></i>Noite</span><span>Faixa visual: 90–150 mg/dL</span></div>
+  </section>
+  <section class="card" id="formCard">
+    <h2 id="formTitle">Adicionar registro</h2>
+    <form id="entryForm">
+      <div><label for="day">Dia</label><input id="day" type="number" min="1" max="31" required placeholder="Ex.: 21"></div>
+      <div><label for="dateLabel">Data / identificação</label><input id="dateLabel" maxlength="30" placeholder="Opcional"></div>
+      <div><label for="fasting">Glicemia em jejum (mg/dL)</label><input id="fasting" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 105"></div>
+      <div><label for="doseAm">Dose (manhã)</label><input id="doseAm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
+      <div><label for="night">Glicemia à noite (mg/dL)</label><input id="night" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 112"></div>
+      <div><label for="dosePm">Dose (noite)</label><input id="dosePm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
+      <div class="full"><label for="notes">Observações</label><textarea id="notes" placeholder="Sintomas, refeições diferentes, exercício ou outras observações…"></textarea></div>
+      <button class="primary full" type="submit" id="saveBtn">Salvar registro</button>
+      <button class="secondary full hidden" type="button" id="cancelEdit">Cancelar edição</button>
+    </form>
+  </section>
+  <section class="card" id="listCard">
+    <h2>Registros do mês</h2>
+    <div class="legend"><span><i class="dot" style="background:#3b9b68"></i>90 a 150</span><span><i class="dot" style="background:#d0443e"></i>Abaixo de 90 ou acima de 150</span></div>
+    <div id="entries"></div>
+  </section>
+  <section class="card">
+    <h2>Relatório mensal</h2>
+    <p style="font-size:12px;color:var(--muted);margin-top:-5px">Gere uma versão para imprimir ou salvar como PDF e compartilhar com a equipe de saúde.</p>
+    <div class="actions no-print">
+      <button class="action" id="reportBtn">Gerar relatório / PDF</button>
+      <button class="action secondary" id="csvBtn">Baixar CSV</button>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Backup dos dados</h2>
+    <p style="font-size:12px;color:var(--muted);margin-top:-5px">Os registros ficam salvos neste navegador/aparelho. Exporte um backup regularmente.</p>
+    <div class="actions no-print">
+      <button class="action" id="exportBtn">Exportar backup</button>
+      <label class="action secondary" style="cursor:pointer">Importar backup<input id="importFile" type="file" accept="application/json" hidden></label>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Sobre os alertas</h2>
+    <p style="font-size:12px;color:var(--muted);margin:0">As cores e alertas seguem os limites que você pediu: verde entre 90 e 150 mg/dL; vermelho abaixo de 90 ou acima de 150 mg/dL. São referências visuais personalizadas, não diagnóstico nem alerta de emergência. Confirme suas metas com a equipe de saúde e não altere doses por conta própria.</p>
+  </section>
+</main>
+<footer>Diário pessoal de acompanhamento — não substitui orientação profissional.</footer>
+<script>
+const months=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro","Histórico inicial"];
+const key="meuDiarioGlicemia_v1";
+const seed=[[26,139,0,142,0],[27,128,0,109,0],[28,133,0,132,0],[29,140,24,122,0],[30,122,0,136,0],[31,122,0,null,null],[1,114,0,109,0],[2,109,0,103,0],[3,114,0,104,0],[4,105,0,113,0],[5,104,0,102,0],[6,91,0,96,0],[7,94,0,91,0],[8,91,0,101,0],[9,96,0,99,0],[10,97,null,null,null]];
+let store={};try{store=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){store={}}
+if(!store["Histórico inicial"]){store["Histórico inicial"]=seed.map((x,i)=>({id:"seed"+i,day:x[0],label:"",fasting:x[1],doseAm:x[2],night:x[3],dosePm:x[4],notes:""}));persist()}
+let current="Janeiro",editing=null,view="month",daySelected=1;
+const $=id=>document.getElementById(id);
+function persist(){localStorage.setItem(key,JSON.stringify(store))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function val(v){return v===null||v===undefined||v===""?"—":v}
+function tone(v){return v==null||v===""?"":(Number(v)<90||Number(v)>150?"bad":"good")}
+function getList(){return store[current]||[]}
+function measurements(){return getList().flatMap(x=>[{day:Number(x.day),time:"Jejum",v:x.fasting},{day:Number(x.day),time:"Noite",v:x.night}]).filter(x=>x.v!==null&&x.v!==""&&Number.isFinite(Number(x.v)))}
+function renderTabs(){$("tabs").innerHTML="";months.forEach(m=>{let b=document.createElement("button");b.textContent=m;b.className=m===current?"active":"";b.onclick=()=>{current=m;editing=null;resetForm();daySelected=1;$("selectedDay").value=1;render()};$("tabs").appendChild(b)})}
+function renderSummary(){
+ const l=getList(),f=l.filter(x=>x.fasting!==null&&x.fasting!=="").map(x=>Number(x.fasting)),n=l.filter(x=>x.night!==null&&x.night!=="").map(x=>Number(x.night));
+ const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length).toFixed(1):"—";
+ $("avgFast").textContent=avg(f);$("avgNight").textContent=avg(n);$("count").textContent=f.length+n.length;
+ $("monthTitle").textContent=current==="Histórico inicial"?"Resumo dos registros transcritos":`Resumo — ${current}`;
+ const alerts=measurements().filter(x=>Number(x.v)<90||Number(x.v)>150);
+ $("alerts").innerHTML=alerts.length?`<div class="alert red"><b>${alerts.length} medição(ões) fora da faixa visual escolhida.</b> Confira os valores registrados e converse com sua equipe de saúde sobre padrões recorrentes.</div>`:'<div class="alert green">Nenhuma medição fora da faixa visual escolhida neste mês.</div>';
+}
+function renderEntries(){
+ const host=$("entries");host.innerHTML="";const l=[...getList()].sort((a,b)=>Number(a.day)-Number(b.day));
+ if(!l.length){host.innerHTML='<div class="empty">Nenhum registro neste mês. Preencha o formulário acima para começar.</div>';return}
+ l.forEach(x=>{const el=document.createElement("article");el.className="entry";el.innerHTML=`<div class="entrytop"><strong>Dia ${esc(x.day)} ${x.label?"· "+esc(x.label):""}</strong><span class="tools"><button class="delete" data-edit="${esc(x.id)}">Editar</button><button class="delete" data-del="${esc(x.id)}">Excluir</button></span></div><div class="entrygrid"><div class="metric ${tone(x.fasting)}"><small>Jejum</small><b>${val(x.fasting)}</b></div><div class="metric"><small>Dose manhã</small><b>${val(x.doseAm)}</b></div><div class="metric ${tone(x.night)}"><small>Noite</small><b>${val(x.night)}</b></div><div class="metric"><small>Dose noite</small><b>${val(x.dosePm)}</b></div></div>${x.notes?`<div class="note">${esc(x.notes)}</div>`:""}`;host.appendChild(el)});
+ host.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));
+ host.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(confirm("Excluir este registro?")){store[current]=(store[current]||[]).filter(x=>x.id!==b.dataset.del);persist();render()}});
+}
+function renderDay(){
+ $("selectedDay").value=daySelected;
+ const x=getList().find(x=>Number(x.day)===Number(daySelected));
+ if(!x){$("dayDetail").innerHTML='<div class="empty">Nenhum registro para este dia. Você pode adicioná-lo no formulário abaixo.</div>';return}
+ $("dayDetail").innerHTML=`<article class="entry"><div class="entrytop"><strong>Dia ${esc(x.day)} ${x.label?"· "+esc(x.label):""}</strong><button class="delete" id="dayEdit">Editar este dia</button></div><div class="entrygrid"><div class="metric ${tone(x.fasting)}"><small>Jejum</small><b>${val(x.fasting)}</b></div><div class="metric"><small>Dose manhã</small><b>${val(x.doseAm)}</b></div><div class="metric ${tone(x.night)}"><small>Noite</small><b>${val(x.night)}</b></div><div class="metric"><small>Dose noite</small><b>${val(x.dosePm)}</b></div></div>${x.notes?`<div class="note">${esc(x.notes)}</div>`:""}</article>`;
+ $("dayEdit").onclick=()=>editEntry(x.id);
+}
+function renderChart(){
+ const c=$("chart"),ctx=c.getContext("2d"),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
+ const vals=measurements(),maxDay=Math.max(31,...vals.map(x=>x.day)),pad={l:38,r:12,t:16,b:28};
+ const yMin=50,yMax=250,px=d=>pad.l+(d-1)/(maxDay-1)*(w-pad.l-pad.r),py=v=>pad.t+(yMax-v)/(yMax-yMin)*(h-pad.t-pad.b);
+ ctx.font="11px system-ui";ctx.strokeStyle="#e2e9e5";ctx.fillStyle="#65756f";ctx.lineWidth=1;
+ [50,90,150,200,250].forEach(v=>{let y=py(v);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText(v,y<25?y+10:y-3,12)});
+ // faixa escolhida
+ ctx.fillStyle="#e3f3e8";ctx.fillRect(pad.l,py(150),w-pad.l-pad.r,py(90)-py(150));
+ [1,5,10,15,20,25,31].forEach(d=>{let x=px(d);ctx.fillStyle="#65756f";ctx.fillText(d,x-4,h-8)});
+ [["fasting","#2e8067"],["night","#3678b8"]].forEach(([field,color])=>{let pts=getList().filter(x=>x[field]!==null&&x[field]!==""&&Number.isFinite(Number(x[field]))).sort((a,b)=>a.day-b.day);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;ctx.beginPath();pts.forEach((x,i)=>{let xx=px(Number(x.day)),yy=py(Number(x[field]));if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)});ctx.stroke();pts.forEach(x=>{ctx.beginPath();ctx.arc(px(Number(x.day)),py(Number(x[field])),3.5,0,Math.PI*2);ctx.fill()})});
+ if(!vals.length){ctx.fillStyle="#65756f";ctx.textAlign="center";ctx.fillText("Adicione medições para visualizar a evolução",w/2,h/2);ctx.textAlign="left"}
+}
+function render(){renderTabs();renderSummary();renderEntries();renderDay();renderChart();$("dailyCard").classList.toggle("hidden",view!=="day");$("chartCard").classList.toggle("hidden",view==="day");$("listCard").classList.toggle("hidden",view==="day");$("monthViewBtn").classList.toggle("active",view==="month");$("dayViewBtn").classList.toggle("active",view==="day")}
+function resetForm(){$("entryForm").reset();editing=null;$("formTitle").textContent="Adicionar registro";$("saveBtn").textContent="Salvar registro";$("cancelEdit").classList.add("hidden")}
+function editEntry(id){let x=getList().find(x=>x.id===id);if(!x)return;editing=id;["day","dateLabel","fasting","doseAm","night","dosePm","notes"].forEach((f,i)=>$(f).value=[x.day,x.label,x.fasting,x.doseAm,x.night,x.dosePm,x.notes][i]??"");$("formTitle").textContent="Editar registro";$("saveBtn").textContent="Salvar alterações";$("cancelEdit").classList.remove("hidden");$("formCard").scrollIntoView({behavior:"smooth",block:"start"})}
+$("monthViewBtn").onclick=()=>{view="month";render()};
+$("dayViewBtn").onclick=()=>{view="day";render()};
+$("selectedDay").onchange=()=>{daySelected=Math.min(31,Math.max(1,Number($("selectedDay").value)||1));renderDay()};
+$("prevDay").onclick=()=>{daySelected=Math.max(1,daySelected-1);renderDay()};
+$("nextDay").onclick=()=>{daySelected=Math.min(31,daySelected+1);renderDay()};
+$("cancelEdit").onclick=resetForm;
+$("entryForm").onsubmit=e=>{e.preventDefault();const entry={id:editing||("id"+Date.now()),day:Number($("day").value),label:$("dateLabel").value.trim(),fasting:$("fasting").value===""?null:Number($("fasting").value),doseAm:$("doseAm").value===""?null:Number($("doseAm").value),night:$("night").value===""?null:Number($("night").value),dosePm:$("dosePm").value===""?null:Number($("dosePm").value),notes:$("notes").value.trim()};if(entry.day<1||entry.day>31){alert("Informe um dia entre 1 e 31.");return}store[current]=store[current]||[];if(editing){store[current]=store[current].map(x=>x.id===editing?entry:x)}else{store[current]=store[current].filter(x=>Number(x.day)!==entry.day);store[current].push(entry)}daySelected=entry.day;persist();resetForm();render();};
+function download(name,data,type){const a=document.createElement("a"),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+$("exportBtn").onclick=()=>download("backup_diario_glicemia.json",JSON.stringify(store,null,2),"application/json");
+$("csvBtn").onclick=()=>{let lines=[["Mês","Dia","Identificação","Jejum mg/dL","Dose manhã","Noite mg/dL","Dose noite","Observações"]];months.forEach(m=>(store[m]||[]).forEach(x=>lines.push([m,x.day,x.label,x.fasting,x.doseAm,x.night,x.dosePm,x.notes])));download("registros_glicemia.csv","\ufeff"+lines.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\n"),"text/csv;charset=utf-8")};
+$("reportBtn").onclick=()=>{view="month";render();window.print()};
+$("importFile").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(!obj||typeof obj!=="object")throw 0;if(!confirm("Importar este backup e substituir os dados atuais neste aparelho?"))return;store=obj;persist();render();alert("Backup importado.")}catch(err){alert("Não foi possível ler esse backup.")}e.target.value=""};
+render();
+</script>
+
+<script>
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(err => console.warn("PWA offline indisponível:", err));
+  });
+}
+</script>
+\n</body>
+</html>

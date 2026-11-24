@@ -1,0 +1,21 @@
+# Meu Diário de Glicemia — PWA
+
+Este pacote contém a versão web instalável (PWA) do diário.
+
+## Publicação necessária
+Para instalar pelo Chrome, publique **todo o conteúdo desta pasta** em um serviço de hospedagem que forneça HTTPS. Não abra `index.html` diretamente pelo gerenciador de arquivos.
+
+Uma opção simples é usar GitHub Pages:
+1. Crie uma conta no GitHub e um repositório público vazio.
+2. Envie todos os arquivos e a pasta `icons` deste pacote para a raiz do repositório.
+3. Em Settings → Pages, habilite a publicação a partir da branch `main` e da pasta `/ (root)`.
+4. Abra o endereço HTTPS gerado no Chrome do Android.
+5. No menu do Chrome, toque em **Instalar app** ou **Adicionar à tela inicial**.
+
+## Recursos
+- Manifesto PWA e ícones 192/512.
+- Service worker com cache básico para abrir offline depois da primeira visita.
+- Dados do diário armazenados localmente no navegador (localStorage).
+
+## Atenção aos dados
+Faça exportações de backup regularmente. Limpar os dados do navegador ou trocar de aparelho pode apagar os registros locais. O aplicativo é um diário, não substitui orientação médica.
