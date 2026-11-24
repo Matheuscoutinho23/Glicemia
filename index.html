@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#184e40">
 <title>Meu Diário de Glicemia</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --g:#184e40;
@@ -30,7 +27,6 @@
   --amberbg:#fff6df;
   --blue:#2563eb;
   --shadow-sm:0 1px 2px rgba(16, 42, 31, .04), 0 4px 14px rgba(16, 42, 31, .04);
-  --shadow-md:0 10px 28px rgba(16, 42, 31, .08);
   --radius-lg:18px;
   --radius-md:13px;
   --radius-sm:9px;
@@ -39,9 +35,9 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:radial-gradient(circle at top right, #e4efe9 0%, var(--bg) 42%, var(--bg) 100%);
+  background:var(--bg);
   color:var(--ink);
-  font:15px/1.5 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   min-height:100dvh;
 }
 button,input,textarea,select{
@@ -49,11 +45,10 @@ button,input,textarea,select{
   touch-action:manipulation;
 }
 .mono{
-  font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-variant-numeric:tabular-nums;
 }
 
-/* Header */
 header{
   position:relative;
   overflow:hidden;
@@ -62,31 +57,18 @@ header{
   padding:24px 18px 22px;
   box-shadow:0 6px 24px rgba(20, 63, 52, .16);
 }
-header::after{
-  content:"";
-  position:absolute;
-  inset:auto -40px -65px auto;
-  width:190px;
-  height:190px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 70%);
-  pointer-events:none;
-}
 .header-inner{max-width:780px;margin:auto;position:relative;z-index:1}
 .eyebrow{
   display:inline-flex;align-items:center;gap:6px;
   font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  color:#d9eee6;background:rgba(255,255,255,.12);
+  color:#d9eee6;background:rgba(255,255,255,.14);
   padding:4px 10px;border-radius:999px;margin-bottom:8px;
 }
 header h1{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
 header p{margin:0;color:#e1f0ea;font-size:13.5px;max-width:52ch}
 
-/* Layout */
 main{max-width:780px;margin:auto;padding:14px 12px 48px}
 
-/* Month Tabs */
-.tabs-wrap{position:relative;margin-bottom:4px}
 .tabs{
   display:flex;gap:7px;overflow-x:auto;padding:4px 2px 12px;
   scrollbar-width:none;-ms-overflow-style:none;
@@ -94,8 +76,7 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{
   border:1px solid var(--line);
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(8px);
+  background:#fff;
   color:var(--g);
   border-radius:999px;
   padding:8.5px 14px;
@@ -103,18 +84,17 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
   font-weight:700;
   font-size:13px;
   cursor:pointer;
-  transition:transform .16s ease, background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+  transition:transform .15s ease, background-color .15s ease, color .15s ease, border-color .15s ease;
 }
-.tabs button:hover{border-color:var(--line-strong);background:#fff;transform:translateY(-1px)}
+.tabs button:hover{border-color:var(--line-strong);transform:translateY(-1px)}
 .tabs button:active{transform:scale(.97)}
 .tabs button.active{
   background:var(--g);
   color:#fff;
   border-color:var(--g);
-  box-shadow:0 4px 12px rgba(24, 78, 64, .24);
+  box-shadow:0 4px 12px rgba(24, 78, 64, .22);
 }
 
-/* Cards */
 .card{
   background:var(--surface);
   border:1px solid var(--line);
@@ -122,11 +102,6 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
   padding:16px;
   margin-bottom:13px;
   box-shadow:var(--shadow-sm);
-  animation:cardIn .26s ease both;
-}
-@keyframes cardIn{
-  from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:translateY(0)}
 }
 .card-head{
   display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -135,7 +110,6 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
 .card h2{font-size:16px;font-weight:750;letter-spacing:-.01em;margin:0}
 .card-sub{font-size:12px;color:var(--muted)}
 
-/* Stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .stat{
   background:var(--surface-2);
@@ -143,9 +117,7 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
   border-radius:var(--radius-md);
   padding:12px 8px;
   text-align:center;
-  transition:transform .18s ease, border-color .18s ease;
 }
-.stat:hover{border-color:var(--line-strong);transform:translateY(-1px)}
 .stat b{
   display:block;
   font-size:21px;
@@ -156,7 +128,6 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
 }
 .stat span{font-size:11.5px;font-weight:600;color:var(--muted)}
 
-/* View Switcher */
 .viewtabs{
   display:grid;grid-template-columns:1fr 1fr;gap:6px;
   background:#e6efea;padding:4px;border-radius:14px;
@@ -165,14 +136,13 @@ main{max-width:780px;margin:auto;padding:14px 12px 48px}
 .viewtabs button{
   border:0;background:transparent;color:var(--muted);
   border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;
-  cursor:pointer;transition:background-color .18s ease, color .18s ease, box-shadow .18s ease;
+  cursor:pointer;transition:background-color .15s ease, color .15s ease;
 }
 .viewtabs button.active{
   background:#fff;color:var(--g);
   box-shadow:0 2px 8px rgba(16, 42, 31, .08);
 }
 
-/* Forms & Inputs */
 form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 label{
   font-size:12px;font-weight:700;color:#3d5049;
@@ -187,9 +157,7 @@ input,textarea,select{
   background:#fff;
   color:var(--ink);
   min-width:0;
-  transition:border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
 }
-input:hover,textarea:hover,select:hover{border-color:#a8beb3}
 input:focus,textarea:focus,select:focus{
   outline:none;
   border-color:var(--g2);
@@ -202,8 +170,8 @@ button.primary,.action{
   border:0;border-radius:11px;
   background:linear-gradient(180deg, var(--g2) 0%, var(--g) 100%);
   color:#fff;padding:11.5px 14px;font-weight:700;font-size:13.5px;
-  cursor:pointer;box-shadow:0 3px 10px rgba(24, 78, 64, .2);
-  transition:transform .15s ease, filter .16s ease, box-shadow .16s ease;
+  cursor:pointer;box-shadow:0 3px 10px rgba(24, 78, 64, .18);
+  transition:transform .14s ease, filter .15s ease;
 }
 button.primary:hover,.action:hover{filter:brightness(1.04);transform:translateY(-1px)}
 button.primary:active,.action:active{transform:scale(.98)}
@@ -224,16 +192,13 @@ button.secondary:hover,.action.secondary:hover{background:#dcece5}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .actions button,.actions label{flex:1;min-width:142px;text-align:center}
 
-/* Entries */
 .entry{
   border:1px solid var(--line);
   border-radius:14px;
   padding:13px;
   margin-top:10px;
   background:#fff;
-  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
-.entry:hover{border-color:var(--line-strong);box-shadow:0 4px 12px rgba(16, 42, 31, .05)}
 .entrytop{
   display:flex;justify-content:space-between;align-items:center;gap:8px;
   margin-bottom:10px;
@@ -244,7 +209,6 @@ button.secondary:hover,.action.secondary:hover{background:#dcece5}
   border:0;background:transparent;color:var(--red);
   font-size:12px;font-weight:700;padding:5px 8px;
   border-radius:7px;cursor:pointer;
-  transition:background-color .15s ease, color .15s ease;
 }
 .delete.edit-btn{color:var(--g)}
 .delete.edit-btn:hover{background:var(--g-soft)}
@@ -253,4 +217,220 @@ button.secondary:hover,.action.secondary:hover{background:#dcece5}
 .entrygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .metric{
   background:var(--surface-2);border:1px solid var(--line);
-  border-
+  border-radius:10px;padding:8px 6px;text-align:center;min-width:0;
+}
+.metric small{display:block;color:var(--muted);font-size:10.5px;font-weight:600;margin-bottom:2px}
+.metric b{font-size:15.5px;font-weight:700;overflow-wrap:anywhere}
+.good{background:var(--goodbg);border-color:var(--goodline);color:var(--good)}
+.good small{color:var(--good)}
+.bad{background:var(--redbg);border-color:var(--redline);color:var(--red)}
+.bad small{color:var(--red)}
+
+.note{
+  font-size:12.5px;color:var(--muted);
+  margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);
+  white-space:pre-wrap;
+}
+.empty{text-align:center;color:var(--muted);padding:20px 10px;font-size:13px}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;font-weight:500}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.alert{padding:11px 13px;border-radius:12px;margin-top:11px;font-size:13px;border:1px solid transparent}
+.alert.red{background:var(--redbg);border-color:var(--redline);color:var(--red)}
+.alert.green{background:var(--goodbg);border-color:var(--goodline);color:var(--good)}
+
+.daynav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.daynav button{
+  border:1px solid var(--line-strong);background:var(--surface-2);
+  border-radius:10px;padding:10px 14px;color:var(--g);
+  font-weight:800;font-size:16px;cursor:pointer;
+}
+.daynav button:hover{background:var(--g-soft)}
+.daynav input{max-width:120px;text-align:center}
+
+.chart-box{
+  position:relative;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:8px 6px 4px;
+}
+canvas{width:100%;height:224px;display:block;cursor:crosshair}
+.chart-inspect{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--muted);
+  min-height:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.chartkey{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:500;margin-top:10px}
+
+.print-banner{
+  display:none;background:var(--surface-2);border:1px solid var(--line-strong);
+  border-radius:12px;padding:11px 14px;margin-bottom:12px;font-size:13px;
+}
+footer{font-size:11.5px;color:var(--muted);text-align:center;padding:8px 12px 28px}
+.hidden{display:none!important}
+
+@media(max-width:520px){
+  .range-grid{grid-template-columns:1fr}
+}
+@media(max-width:390px){
+  .entrygrid{grid-template-columns:repeat(2,1fr)}
+  .stats{gap:6px}
+  .stat b{font-size:18px}
+}
+@media print{
+  body{background:#fff}
+  header,.tabs,.viewtabs,#formCard,#dailyCard,.no-print,.chart-inspect,footer{display:none!important}
+  main{max-width:none;padding:0}
+  .print-banner{display:block}
+  .card{box-shadow:none;break-inside:avoid;border:0;padding:10px 0}
+  .entry{break-inside:avoid;box-shadow:none}
+}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Diário Glicemia">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="eyebrow">Acompanhamento Pessoal</div>
+    <h1>Meu Diário de Glicemia</h1>
+    <p>Histórico, gráficos, consultas diárias e relatórios por data em um só lugar.</p>
+  </div>
+</header>
+
+<main>
+  <div class="print-banner" id="printBanner"></div>
+
+  <nav class="tabs" id="tabs" aria-label="Meses"></nav>
+
+  <section class="card">
+    <div class="card-head">
+      <h2 id="monthTitle">Resumo do mês</h2>
+      <span class="card-sub">Faixa 75–150 mg/dL</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b class="mono" id="avgFast">—</b><span>Média jejum</span></div>
+      <div class="stat"><b class="mono" id="avgNight">—</b><span>Média noite</span></div>
+      <div class="stat"><b class="mono" id="count">0</b><span>Medições</span></div>
+    </div>
+    <div id="alerts"></div>
+  </section>
+
+  <div class="viewtabs no-print">
+    <button type="button" id="monthViewBtn" class="active">Visão do mês</button>
+    <button type="button" id="dayViewBtn">Dia por dia</button>
+  </div>
+
+  <section class="card hidden" id="dailyCard">
+    <div class="card-head">
+      <h2>Consultar um dia</h2>
+      <span class="card-sub">Navegação rápida</span>
+    </div>
+    <div class="daynav">
+      <button type="button" id="prevDay" aria-label="Dia anterior">‹</button>
+      <div style="flex:1">
+        <label for="selectedDay">Dia do mês</label>
+        <input class="mono" id="selectedDay" type="number" min="1" max="31" value="1">
+      </div>
+      <button type="button" id="nextDay" aria-label="Próximo dia">›</button>
+    </div>
+    <div id="dayDetail"></div>
+  </section>
+
+  <section class="card" id="chartCard">
+    <div class="card-head">
+      <h2>Evolução no mês</h2>
+      <span class="card-sub">Toque nos pontos</span>
+    </div>
+    <div class="chart-box">
+      <canvas id="chart" aria-label="Gráfico da glicemia ao longo do mês"></canvas>
+    </div>
+    <div class="chart-inspect" id="chartInspect">
+      <span>Toque ou passe o cursor no gráfico para ver os valores do dia.</span>
+    </div>
+    <div class="chartkey">
+      <span><i class="dot" style="background:#256f5b"></i>Jejum</span>
+      <span><i class="dot" style="background:#2563eb"></i>Noite</span>
+      <span>Faixa visual: 75–150 mg/dL</span>
+    </div>
+  </section>
+
+  <section class="card" id="formCard">
+    <div class="card-head">
+      <h2 id="formTitle">Adicionar registro</h2>
+      <span class="card-sub">Salvo no aparelho</span>
+    </div>
+    <form id="entryForm">
+      <div><label for="day">Dia</label><input class="mono" id="day" type="number" min="1" max="31" required placeholder="Ex.: 21"></div>
+      <div><label for="dateLabel">Data / identificação</label><input id="dateLabel" maxlength="30" placeholder="Ex.: 21/11 ou Manhã"></div>
+      <div><label for="fasting">Glicemia em jejum (mg/dL)</label><input class="mono" id="fasting" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 105"></div>
+      <div><label for="doseAm">Dose (manhã)</label><input class="mono" id="doseAm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
+      <div><label for="night">Glicemia à noite (mg/dL)</label><input class="mono" id="night" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 112"></div>
+      <div><label for="dosePm">Dose (noite)</label><input class="mono" id="dosePm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
+      <div class="full"><label for="notes">Observações</label><textarea id="notes" placeholder="Sintomas, refeições diferentes, exercício ou outras observações…"></textarea></div>
+      <button class="primary full" type="submit" id="saveBtn">Salvar registro</button>
+      <button class="secondary full hidden" type="button" id="cancelEdit">Cancelar edição</button>
+    </form>
+  </section>
+
+  <section class="card" id="listCard">
+    <div class="card-head">
+      <h2 id="listTitle">Registros do mês</h2>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:#238859"></i>75 a 150 mg/dL</span>
+      <span><i class="dot" style="background:#d0443e"></i>Abaixo de 75 ou acima de 150 mg/dL</span>
+    </div>
+    <div id="entries"></div>
+  </section>
+
+  <section class="card" id="reportCard">
+    <div class="card-head">
+      <h2>Relatórios</h2>
+      <span class="card-sub">PDF e CSV por data</span>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin:-4px 0 12px">Escolha a data inicial e a data final do período para gerar PDF/impressão ou exportar CSV.</p>
+    <div class="range-grid no-print">
+      <div>
+        <label for="startDate">Data inicial</label>
+        <input class="mono" id="startDate" type="date">
+      </div>
+      <div>
+        <label for="endDate">Data final</label>
+        <input class="mono" id="endDate" type="date">
+      </div>
+    </div>
+    <div class="range-meta" id="reportSummary">Carregando período…</div>
+    <div class="actions no-print">
+      <button type="button" class="action secondary" id="tenDaysBtn">Período de 10 dias</button>
+      <button type="button" class="action secondary" id="allDatesBtn">Todos os registros</button>
+      <button type="button" class="action" id="reportBtn">Gerar relatório / PDF</button>
+      <button type="button" class="action secondary" id="csvBtn">Baixar CSV do período</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Backup dos dados</h2>
+      <span class="card-sub">JSON local</span>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin:-4px 0 12px">Os registros ficam salvos neste navegador/aparelho. Exporte um backup regularmente.</p>
+    <div class="actions no-print">
+      <button type="button" class="action" id="exportBtn">Exportar backup</button>
+      <label class="action secondary" style="cursor:pointer">Importar backup<input id="importFile" type="file" accept="application/json" hidden></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Sobre os alertas</h2>
+    <p style="font-size:12.5px;
