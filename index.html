@@ -3,105 +3,336 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#205c4c">
+<meta name="theme-color" content="#184e40">
 <title>Meu Diário de Glicemia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --g:#205c4c;--g2:#317b67;--bg:#f2f6f4;--ink:#20312b;--muted:#66776f;
-  --line:#dce6e1;--white:#fff;--red:#b42318;--redbg:#fde8e6;
-  --good:#23734d;--goodbg:#e3f3e8;--amber:#875b0b;--amberbg:#fff4d6;
-  --blue:#2b6cb0
+  --g:#184e40;
+  --g2:#256f5b;
+  --g-soft:#e6f1ed;
+  --bg:#f3f6f4;
+  --surface:#ffffff;
+  --surface-2:#f7faf8;
+  --ink:#172621;
+  --muted:#5c6e67;
+  --line:#dfe8e3;
+  --line-strong:#c7d6ce;
+  --red:#b42318;
+  --redbg:#fef0ef;
+  --redline:#f8c8c4;
+  --good:#196b45;
+  --goodbg:#e7f5ee;
+  --goodline:#bfe5d2;
+  --amber:#875b0b;
+  --amberbg:#fff6df;
+  --blue:#2563eb;
+  --shadow-sm:0 1px 2px rgba(16, 42, 31, .04), 0 4px 14px rgba(16, 42, 31, .04);
+  --shadow-md:0 10px 28px rgba(16, 42, 31, .08);
+  --radius-lg:18px;
+  --radius-md:13px;
+  --radius-sm:9px;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-header{background:linear-gradient(130deg,var(--g),var(--g2));color:#fff;padding:22px 16px 19px}
-header h1{font-size:21px;margin:0 0 5px}
-header p{margin:0;color:#e3f1eb;font-size:13px}
-main{max-width:780px;margin:auto;padding:13px 12px 40px}
-.tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 1px 12px;scrollbar-width:thin}
-.tabs button,.viewtabs button{
-  border:1px solid var(--line);background:#fff;color:var(--g);
-  border-radius:22px;padding:9px 13px;white-space:nowrap;font-weight:650;cursor:pointer
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:radial-gradient(circle at top right, #e4efe9 0%, var(--bg) 42%, var(--bg) 100%);
+  color:var(--ink);
+  font:15px/1.5 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height:100dvh;
 }
-.tabs button.active,.viewtabs button.active{background:var(--g);color:#fff;border-color:var(--g)}
+button,input,textarea,select{
+  font-family:inherit;
+  touch-action:manipulation;
+}
+.mono{
+  font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Header */
+header{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg, #133f34 0%, var(--g) 52%, var(--g2) 100%);
+  color:#fff;
+  padding:24px 18px 22px;
+  box-shadow:0 6px 24px rgba(20, 63, 52, .16);
+}
+header::after{
+  content:"";
+  position:absolute;
+  inset:auto -40px -65px auto;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 70%);
+  pointer-events:none;
+}
+.header-inner{max-width:780px;margin:auto;position:relative;z-index:1}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#d9eee6;background:rgba(255,255,255,.12);
+  padding:4px 10px;border-radius:999px;margin-bottom:8px;
+}
+header h1{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+header p{margin:0;color:#e1f0ea;font-size:13.5px;max-width:52ch}
+
+/* Layout */
+main{max-width:780px;margin:auto;padding:14px 12px 48px}
+
+/* Month Tabs */
+.tabs-wrap{position:relative;margin-bottom:4px}
+.tabs{
+  display:flex;gap:7px;overflow-x:auto;padding:4px 2px 12px;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(8px);
+  color:var(--g);
+  border-radius:999px;
+  padding:8.5px 14px;
+  white-space:nowrap;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+  transition:transform .16s ease, background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.tabs button:hover{border-color:var(--line-strong);background:#fff;transform:translateY(-1px)}
+.tabs button:active{transform:scale(.97)}
+.tabs button.active{
+  background:var(--g);
+  color:#fff;
+  border-color:var(--g);
+  box-shadow:0 4px 12px rgba(24, 78, 64, .24);
+}
+
+/* Cards */
 .card{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #173c2a0a
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:16px;
+  margin-bottom:13px;
+  box-shadow:var(--shadow-sm);
+  animation:cardIn .26s ease both;
 }
-.card h2{font-size:16px;margin:0 0 12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:#f5f8f6;border-radius:12px;padding:10px 7px;text-align:center}
-.stat b{display:block;font-size:20px;color:var(--g)}
-.stat span{font-size:11px;color:var(--muted)}
-.viewtabs{display:flex;gap:7px;margin-bottom:12px}
-.viewtabs button{flex:1}
-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-label{font-size:12px;font-weight:700;color:#43564e;display:block;margin-bottom:5px}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.card-head{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  margin-bottom:12px;
+}
+.card h2{font-size:16px;font-weight:750;letter-spacing:-.01em;margin:0}
+.card-sub{font-size:12px;color:var(--muted)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:12px 8px;
+  text-align:center;
+  transition:transform .18s ease, border-color .18s ease;
+}
+.stat:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+.stat b{
+  display:block;
+  font-size:21px;
+  font-weight:700;
+  color:var(--g);
+  line-height:1.2;
+  margin-bottom:3px;
+}
+.stat span{font-size:11.5px;font-weight:600;color:var(--muted)}
+
+/* View Switcher */
+.viewtabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  background:#e6efea;padding:4px;border-radius:14px;
+  border:1px solid var(--line);margin-bottom:13px;
+}
+.viewtabs button{
+  border:0;background:transparent;color:var(--muted);
+  border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;
+  cursor:pointer;transition:background-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+.viewtabs button.active{
+  background:#fff;color:var(--g);
+  box-shadow:0 2px 8px rgba(16, 42, 31, .08);
+}
+
+/* Forms & Inputs */
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+label{
+  font-size:12px;font-weight:700;color:#3d5049;
+  display:block;margin-bottom:5px;
+}
 input,textarea,select{
-  width:100%;border:1px solid #cbd9d2;border-radius:10px;
-  padding:11px 10px;font:inherit;background:#fff;color:var(--ink);min-width:0
+  width:100%;
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-sm);
+  padding:11px 12px;
+  font-size:14.5px;
+  background:#fff;
+  color:var(--ink);
+  min-width:0;
+  transition:border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
 }
-input:focus,textarea:focus,select:focus{outline:2px solid #317b6733;border-color:var(--g2)}
-textarea{grid-column:1/-1;min-height:62px;resize:vertical}
+input:hover,textarea:hover,select:hover{border-color:#a8beb3}
+input:focus,textarea:focus,select:focus{
+  outline:none;
+  border-color:var(--g2);
+  box-shadow:0 0 0 3px rgba(37, 111, 91, .15);
+}
+textarea{grid-column:1/-1;min-height:68px;resize:vertical}
 .full{grid-column:1/-1}
+
 button.primary,.action{
-  border:0;border-radius:11px;background:var(--g);color:#fff;
-  padding:11px 13px;font-weight:700;font-size:14px;cursor:pointer
+  border:0;border-radius:11px;
+  background:linear-gradient(180deg, var(--g2) 0%, var(--g) 100%);
+  color:#fff;padding:11.5px 14px;font-weight:700;font-size:13.5px;
+  cursor:pointer;box-shadow:0 3px 10px rgba(24, 78, 64, .2);
+  transition:transform .15s ease, filter .16s ease, box-shadow .16s ease;
 }
+button.primary:hover,.action:hover{filter:brightness(1.04);transform:translateY(-1px)}
+button.primary:active,.action:active{transform:scale(.98)}
+
 button.secondary,.action.secondary{
-  background:#eaf2ee;color:var(--g);border:1px solid #d2e2da
+  background:var(--g-soft);color:var(--g);
+  border:1px solid #cce0d7;box-shadow:none;
 }
-.range-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
-.range-meta{font-size:12px;color:var(--muted);background:#f5f8f6;border-radius:10px;padding:9px 11px;margin-bottom:10px}
+button.secondary:hover,.action.secondary:hover{background:#dcece5}
+
+.range-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.range-meta{
+  font-size:12.5px;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);
+  border-left:3.5px solid var(--g2);
+  border-radius:10px;padding:10px 12px;margin-bottom:12px;
+}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
-.actions button,.actions label{flex:1;min-width:140px;text-align:center}
-.entry{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:9px;background:#fff}
-.entrytop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
-.entrytop strong{font-size:14px}
+.actions button,.actions label{flex:1;min-width:142px;text-align:center}
+
+/* Entries */
+.entry{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px;
+  margin-top:10px;
+  background:#fff;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.entry:hover{border-color:var(--line-strong);box-shadow:0 4px 12px rgba(16, 42, 31, .05)}
+.entrytop{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  margin-bottom:10px;
+}
+.entrytop strong{font-size:14px;font-weight:750}
 .entrytop .tools{white-space:nowrap;display:flex;gap:4px}
-.delete{border:0;background:transparent;color:var(--red);font-size:12px;font-weight:600;padding:5px 7px;border-radius:6px;cursor:pointer}
+.delete{
+  border:0;background:transparent;color:var(--red);
+  font-size:12px;font-weight:700;padding:5px 8px;
+  border-radius:7px;cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
 .delete.edit-btn{color:var(--g)}
-.delete:hover{background:#f5f8f6}
-.entrygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.metric{background:#f6f8f7;border-radius:9px;padding:8px 5px;text-align:center;min-width:0}
-.metric small{display:block;color:var(--muted);font-size:10px}
-.metric b{font-size:15px;overflow-wrap:anywhere}
-.good{background:var(--goodbg);color:var(--good)}
-.bad{background:var(--redbg);color:var(--red)}
-.note{font-size:12px;color:var(--muted);margin-top:8px;white-space:pre-wrap}
-.empty{text-align:center;color:var(--muted);padding:18px 8px;font-size:13px}
-.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
-.alert{padding:10px 12px;border-radius:11px;margin:10px 0 0;font-size:13px}
-.alert.red{background:var(--redbg);color:var(--red)}
+.delete.edit-btn:hover{background:var(--g-soft)}
+.delete:hover{background:var(--redbg)}
+
+.entrygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.metric{
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:10px;padding:8px 6px;text-align:center;min-width:0;
+}
+.metric small{display:block;color:var(--muted);font-size:10.5px;font-weight:600;margin-bottom:2px}
+.metric b{font-size:15.5px;font-weight:700;overflow-wrap:anywhere}
+.good{background:var(--goodbg);border-color:var(--goodline);color:var(--good)}
+.good small{color:var(--good)}
+.bad{background:var(--redbg);border-color:var(--redline);color:var(--red)}
+.bad small{color:var(--red)}
+
+.note{
+  font-size:12.5px;color:var(--muted);
+  margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);
+  white-space:pre-wrap;
+}
+.empty{text-align:center;color:var(--muted);padding:20px 10px;font-size:13px}
+
+/* Legend & Alerts */
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;font-weight:500}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.alert{padding:11px 13px;border-radius:12px;margin-top:11px;font-size:13px;border:1px solid transparent}
+.alert.red{background:var(--redbg);border-color:var(--redline);color:var(--red)}
 .alert.amber{background:var(--amberbg);color:var(--amber)}
-.alert.green{background:var(--goodbg);color:var(--good)}
+.alert.green{background:var(--goodbg);border-color:var(--goodline);color:var(--good)}
+
+/* Day Nav */
 .daynav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .daynav button{
-  border:1px solid var(--line);background:#f5f8f6;border-radius:10px;
-  padding:9px 12px;color:var(--g);font-weight:700;cursor:pointer
+  border:1px solid var(--line-strong);background:var(--surface-2);
+  border-radius:10px;padding:10px 14px;color:var(--g);
+  font-weight:800;font-size:16px;cursor:pointer;
+  transition:background-color .15s ease, transform .15s ease;
 }
-.daynav input{max-width:110px;text-align:center}
-canvas{width:100%;height:220px;display:block}
-.chartkey{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
-.print-banner{display:none;background:#f5f8f6;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px}
-footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px}
+.daynav button:hover{background:var(--g-soft)}
+.daynav button:active{transform:scale(.96)}
+.daynav input{max-width:120px;text-align:center}
+
+/* Chart */
+.chart-box{
+  position:relative;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:8px 6px 4px;
+}
+canvas{width:100%;height:224px;display:block;cursor:crosshair}
+.chart-inspect{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--muted);
+  min-height:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.chartkey{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:500;margin-top:10px}
+
+.print-banner{
+  display:none;background:var(--surface-2);border:1px solid var(--line-strong);
+  border-radius:12px;padding:11px 14px;margin-bottom:12px;font-size:13px;
+}
+footer{font-size:11.5px;color:var(--muted);text-align:center;padding:8px 12px 28px}
 .hidden{display:none!important}
+
 @media(max-width:520px){
   .range-grid{grid-template-columns:1fr}
 }
 @media(max-width:390px){
   .entrygrid{grid-template-columns:repeat(2,1fr)}
-  .stats{gap:5px}
+  .stats{gap:6px}
   .stat b{font-size:18px}
 }
 @media print{
   body{background:#fff}
-  header,.tabs,.viewtabs,#formCard,#dailyCard,.no-print,footer{display:none!important}
+  header,.tabs,.viewtabs,#formCard,#dailyCard,.no-print,.chart-inspect,footer{display:none!important}
   main{max-width:none;padding:0}
   .print-banner{display:block}
-  .card{box-shadow:none;break-inside:avoid;border:0}
-  .entry{break-inside:avoid}
+  .card{box-shadow:none;break-inside:avoid;border:0;padding:10px 0}
+  .entry{break-inside:avoid;box-shadow:none}
 }
 </style>
 <link rel="manifest" href="manifest.webmanifest">
@@ -112,19 +343,29 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
 </head>
 <body>
 <header>
-  <h1>Meu Diário de Glicemia</h1>
-  <p>Histórico, gráficos e acompanhamento diário em um só lugar.</p>
+  <div class="header-inner">
+    <div class="eyebrow">Acompanhamento Pessoal</div>
+    <h1>Meu Diário de Glicemia</h1>
+    <p>Histórico, gráficos, consultas diárias e relatórios por data em um só lugar.</p>
+  </div>
 </header>
+
 <main>
   <div class="print-banner" id="printBanner"></div>
-  <nav class="tabs" id="tabs" aria-label="Meses"></nav>
+
+  <div class="tabs-wrap">
+    <nav class="tabs" id="tabs" aria-label="Meses"></nav>
+  </div>
 
   <section class="card">
-    <h2 id="monthTitle">Resumo do mês</h2>
+    <div class="card-head">
+      <h2 id="monthTitle">Resumo do mês</h2>
+      <span class="card-sub" id="monthBadge">Faixa 90–150 mg/dL</span>
+    </div>
     <div class="stats">
-      <div class="stat"><b id="avgFast">—</b><span>Média jejum</span></div>
-      <div class="stat"><b id="avgNight">—</b><span>Média noite</span></div>
-      <div class="stat"><b id="count">0</b><span>Medições</span></div>
+      <div class="stat"><b class="mono" id="avgFast">—</b><span>Média jejum</span></div>
+      <div class="stat"><b class="mono" id="avgNight">—</b><span>Média noite</span></div>
+      <div class="stat"><b class="mono" id="count">0</b><span>Medições</span></div>
     </div>
     <div id="alerts"></div>
   </section>
@@ -135,12 +376,15 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
   </div>
 
   <section class="card hidden" id="dailyCard">
-    <h2>Consultar um dia</h2>
+    <div class="card-head">
+      <h2>Consultar um dia</h2>
+      <span class="card-sub">Navegação rápida</span>
+    </div>
     <div class="daynav">
       <button type="button" id="prevDay" aria-label="Dia anterior">‹</button>
       <div style="flex:1">
         <label for="selectedDay">Dia do mês</label>
-        <input id="selectedDay" type="number" min="1" max="31" value="1">
+        <input class="mono" id="selectedDay" type="number" min="1" max="31" value="1">
       </div>
       <button type="button" id="nextDay" aria-label="Próximo dia">›</button>
     </div>
@@ -148,24 +392,35 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
   </section>
 
   <section class="card" id="chartCard">
-    <h2>Evolução no mês</h2>
-    <canvas id="chart" aria-label="Gráfico da glicemia ao longo do mês"></canvas>
+    <div class="card-head">
+      <h2>Evolução no mês</h2>
+      <span class="card-sub">Toque nos pontos</span>
+    </div>
+    <div class="chart-box">
+      <canvas id="chart" aria-label="Gráfico da glicemia ao longo do mês"></canvas>
+    </div>
+    <div class="chart-inspect" id="chartInspect">
+      <span>Toque ou passe o cursor no gráfico para ver os valores do dia.</span>
+    </div>
     <div class="chartkey">
-      <span><i class="dot" style="background:#2e8067"></i>Jejum</span>
-      <span><i class="dot" style="background:#3678b8"></i>Noite</span>
+      <span><i class="dot" style="background:#256f5b"></i>Jejum</span>
+      <span><i class="dot" style="background:#2563eb"></i>Noite</span>
       <span>Faixa visual: 90–150 mg/dL</span>
     </div>
   </section>
 
   <section class="card" id="formCard">
-    <h2 id="formTitle">Adicionar registro</h2>
+    <div class="card-head">
+      <h2 id="formTitle">Adicionar registro</h2>
+      <span class="card-sub">Salvo no aparelho</span>
+    </div>
     <form id="entryForm">
-      <div><label for="day">Dia</label><input id="day" type="number" min="1" max="31" required placeholder="Ex.: 21"></div>
-      <div><label for="dateLabel">Data / identificação</label><input id="dateLabel" maxlength="30" placeholder="Opcional"></div>
-      <div><label for="fasting">Glicemia em jejum (mg/dL)</label><input id="fasting" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 105"></div>
-      <div><label for="doseAm">Dose (manhã)</label><input id="doseAm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
-      <div><label for="night">Glicemia à noite (mg/dL)</label><input id="night" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 112"></div>
-      <div><label for="dosePm">Dose (noite)</label><input id="dosePm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
+      <div><label for="day">Dia</label><input class="mono" id="day" type="number" min="1" max="31" required placeholder="Ex.: 21"></div>
+      <div><label for="dateLabel">Data / identificação</label><input id="dateLabel" maxlength="30" placeholder="Ex.: 21/11 ou Manhã"></div>
+      <div><label for="fasting">Glicemia em jejum (mg/dL)</label><input class="mono" id="fasting" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 105"></div>
+      <div><label for="doseAm">Dose (manhã)</label><input class="mono" id="doseAm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
+      <div><label for="night">Glicemia à noite (mg/dL)</label><input class="mono" id="night" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 112"></div>
+      <div><label for="dosePm">Dose (noite)</label><input class="mono" id="dosePm" type="number" min="0" step="any" inputmode="decimal" placeholder="Conforme prescrição"></div>
       <div class="full"><label for="notes">Observações</label><textarea id="notes" placeholder="Sintomas, refeições diferentes, exercício ou outras observações…"></textarea></div>
       <button class="primary full" type="submit" id="saveBtn">Salvar registro</button>
       <button class="secondary full hidden" type="button" id="cancelEdit">Cancelar edição</button>
@@ -173,55 +428,47 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
   </section>
 
   <section class="card" id="listCard">
-    <h2 id="listTitle">Registros do mês</h2>
+    <div class="card-head">
+      <h2 id="listTitle">Registros do mês</h2>
+    </div>
     <div class="legend">
-      <span><i class="dot" style="background:#3b9b68"></i>90 a 150 mg/dL</span>
+      <span><i class="dot" style="background:#238859"></i>90 a 150 mg/dL</span>
       <span><i class="dot" style="background:#d0443e"></i>Abaixo de 90 ou acima de 150 mg/dL</span>
     </div>
     <div id="entries"></div>
   </section>
 
   <section class="card" id="reportCard">
-    <h2>Relatório por período</h2>
-    <p style="font-size:12px;color:var(--muted);margin-top:-5px">Separe em blocos de 10 dias para enviar ao médico ou escolha outro recorte para PDF e CSV.</p>
+    <div class="card-head">
+      <h2>Relatórios</h2>
+      <span class="card-sub">PDF e CSV por data</span>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin:-4px 0 12px">Escolha a data inicial e a data final do período para gerar PDF/impressão ou exportar CSV.</p>
     <div class="range-grid no-print">
       <div>
-        <label for="reportScope">Período</label>
-        <select id="reportScope">
-          <option value="ten">Blocos de 10 dias (aba atual)</option>
-          <option value="month">Aba atual completa</option>
-          <option value="days">Intervalo de dias (aba atual)</option>
-          <option value="all">Todos os meses / histórico</option>
-        </select>
+        <label for="startDate">Data inicial</label>
+        <input class="mono" id="startDate" type="date">
       </div>
-      <div id="tenBlockBox">
-        <label for="tenBlockSelect">Bloco de 10 dias</label>
-        <select id="tenBlockSelect">
-          <option value="1">1º bloco (Dias 1 a 10)</option>
-          <option value="2">2º bloco (Dias 11 a 20)</option>
-          <option value="3">3º bloco (Dias 21 a 31)</option>
-        </select>
-      </div>
-      <div id="startDayBox" class="hidden">
-        <label for="reportStartDay">Dia inicial</label>
-        <input id="reportStartDay" type="number" min="1" max="31" value="1">
-      </div>
-      <div id="endDayBox" class="hidden">
-        <label for="reportEndDay">Dia final</label>
-        <input id="reportEndDay" type="number" min="1" max="31" value="10">
+      <div>
+        <label for="endDate">Data final</label>
+        <input class="mono" id="endDate" type="date">
       </div>
     </div>
     <div class="range-meta" id="reportSummary">Carregando período…</div>
     <div class="actions no-print">
-      <button type="button" class="secondary" id="nextTenBtn">Próximo bloco de 10 dias</button>
+      <button type="button" class="action secondary" id="tenDaysBtn">Período de 10 dias</button>
+      <button type="button" class="action secondary" id="allDatesBtn">Todos os registros</button>
       <button type="button" class="action" id="reportBtn">Gerar relatório / PDF</button>
       <button type="button" class="action secondary" id="csvBtn">Baixar CSV do período</button>
     </div>
   </section>
 
   <section class="card">
-    <h2>Backup dos dados</h2>
-    <p style="font-size:12px;color:var(--muted);margin-top:-5px">Os registros ficam salvos neste navegador/aparelho. Exporte um backup regularmente.</p>
+    <div class="card-head">
+      <h2>Backup dos dados</h2>
+      <span class="card-sub">JSON local</span>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin:-4px 0 12px">Os registros ficam salvos neste navegador/aparelho. Exporte um backup regularmente.</p>
     <div class="actions no-print">
       <button type="button" class="action" id="exportBtn">Exportar backup</button>
       <label class="action secondary" style="cursor:pointer">Importar backup<input id="importFile" type="file" accept="application/json" hidden></label>
@@ -230,7 +477,7 @@ footer{font-size:11px;color:var(--muted);text-align:center;padding:8px 12px 24px
 
   <section class="card">
     <h2>Sobre os alertas</h2>
-    <p style="font-size:12px;color:var(--muted);margin:0">As cores e alertas seguem os limites configurados: verde entre 90 e 150 mg/dL; vermelho abaixo de 90 ou acima de 150 mg/dL. São referências visuais personalizadas, não diagnóstico nem alerta de emergência. Confirme suas metas com a equipe de saúde e não altere doses por conta própria.</p>
+    <p style="font-size:12.5px;color:var(--muted);margin:0">As cores e alertas seguem os limites configurados: verde entre 90 e 150 mg/dL; vermelho abaixo de 90 ou acima de 150 mg/dL. São referências visuais personalizadas, não diagnóstico nem alerta de emergência. Confirme suas metas com a equipe de saúde e não altere doses por conta própria.</p>
   </section>
 </main>
 <footer>Diário pessoal de acompanhamento — não substitui orientação profissional.</footer>
@@ -241,6 +488,11 @@ const months = [
   "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
   "Histórico inicial"
 ];
+const monthIndexMap = {
+  "Janeiro": 0, "Fevereiro": 1, "Março": 2, "Abril": 3,
+  "Maio": 4, "Junho": 5, "Julho": 6, "Agosto": 7,
+  "Setembro": 8, "Outubro": 9, "Novembro": 10, "Dezembro": 11
+};
 const STORAGE_KEY = "meuDiarioGlicemia_v1";
 const seed = [
   [26,139,0,142,0],[27,128,0,109,0],[28,133,0,132,0],[29,140,24,122,0],
@@ -261,9 +513,32 @@ if (!store["Histórico inicial"]) {
   persist();
 }
 
+function toIsoDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function addDaysIso(isoStr, deltaDays) {
+  const parts = isoStr.split("-").map(Number);
+  const dt = new Date(parts[0], parts[1] - 1, parts[2] + deltaDays);
+  return toIsoDate(dt);
+}
+
+function formatBrDate(isoStr) {
+  if (!isoStr || !/^\d{4}-\d{2}-\d{2}$/.test(isoStr)) return "";
+  const [y, m, d] = isoStr.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+const todayIso = toIsoDate(new Date());
 let current = "Janeiro", editing = null, view = "month", daySelected = 1;
-let reportScope = "ten", tenBlock = 1, reportStartDay = 1, reportEndDay = 10;
+let reportStartDate = addDaysIso(todayIso, -9);
+let reportEndDate = todayIso;
+let filterByDateActive = true;
 let reportOverrideActive = false;
+let inspectedDay = null;
 
 const $ = id => document.getElementById(id);
 
@@ -293,6 +568,46 @@ function isOutOfRange(v) {
 function tone(v) {
   if (!hasNum(v)) return "";
   return isOutOfRange(v) ? "bad" : "good";
+}
+
+function parseEntryDateIso(monthName, item) {
+  const label = String(item.label || "").trim();
+  const brFull = label.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{2,4})\b/);
+  if (brFull) {
+    const d = Number(brFull[1]);
+    const m = Number(brFull[2]) - 1;
+    let y = Number(brFull[3]);
+    if (y < 100) y += 2000;
+    const dt = new Date(y, m, d);
+    if (dt.getFullYear() === y && dt.getMonth() === m && dt.getDate() === d) {
+      return toIsoDate(dt);
+    }
+  }
+
+  const brShort = label.match(/\b(\d{1,2})\/(\d{1,2})\b/);
+  if (brShort) {
+    const d = Number(brShort[1]);
+    const m = Number(brShort[2]) - 1;
+    const baseYear = reportStartDate ? Number(reportStartDate.slice(0, 4)) : new Date().getFullYear();
+    const dt = new Date(baseYear, m, d);
+    if (dt.getFullYear() === baseYear && dt.getMonth() === m && dt.getDate() === d) {
+      return toIsoDate(dt);
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(monthIndexMap, monthName)) {
+    const mIdx = monthIndexMap[monthName];
+    const baseYear = reportStartDate ? Number(reportStartDate.slice(0, 4)) : new Date().getFullYear();
+    const dayNum = Number(item.day);
+    if (Number.isInteger(dayNum) && dayNum >= 1 && dayNum <= 31) {
+      const dt = new Date(baseYear, mIdx, dayNum);
+      if (dt.getMonth() === mIdx) {
+        return toIsoDate(dt);
+      }
+    }
+  }
+
+  return null;
 }
 
 function sortOrderForMonth(monthName, day) {
@@ -330,73 +645,45 @@ function clampDay(v, fallback = 1) {
   return Math.min(31, Math.max(1, Math.round(n)));
 }
 
-function getTenRange(blockNum) {
-  const b = Math.min(3, Math.max(1, Number(blockNum) || 1));
-  if (b === 1) return { block: 1, start: 1, end: 10, name: "1º bloco (Dias 1 a 10)" };
-  if (b === 2) return { block: 2, start: 11, end: 20, name: "2º bloco (Dias 11 a 20)" };
-  return { block: 3, start: 21, end: 31, name: "3º bloco (Dias 21 a 31)" };
-}
-
-function filterByDayRange(items, start, end) {
-  const ordered = sortedList(current);
-  const s = clampDay(start, 1);
-  const e = clampDay(end, 31);
-
-  if (current === "Histórico inicial") {
-    const sOrd = sortOrderForMonth(current, s);
-    const eOrd = sortOrderForMonth(current, e);
-    const minOrd = Math.min(sOrd, eOrd);
-    const maxOrd = Math.max(sOrd, eOrd);
-    return ordered.filter(item => {
-      const ord = sortOrderForMonth(current, item.day);
-      return ord >= minOrd && ord <= maxOrd;
-    });
-  }
-
-  const minD = Math.min(s, e);
-  const maxD = Math.max(s, e);
-  return ordered.filter(item => Number(item.day) >= minD && Number(item.day) <= maxD);
-}
-
 function getReportSelection() {
-  if (reportScope === "all") {
-    const rows = [];
-    months.forEach(m => {
-      sortedList(m).forEach(item => rows.push({ month: m, ...item }));
+  const allRows = [];
+  months.forEach(m => {
+    sortedList(m).forEach(item => {
+      allRows.push({
+        month: m,
+        isoDate: parseEntryDateIso(m, item),
+        ...item
+      });
     });
+  });
+
+  if (!filterByDateActive) {
     return {
-      label: "Todos os meses e histórico inicial",
-      fileSlug: "completo",
-      rows
+      label: "Todos os registros",
+      fileSlug: "todos_registros",
+      rows: allRows
     };
   }
 
-  if (reportScope === "ten") {
-    const tr = getTenRange(tenBlock);
-    const filtered = filterByDayRange(getList(current), tr.start, tr.end);
-    return {
-      label: `${current} · ${tr.name}`,
-      fileSlug: `${current}_bloco10_${tr.start}-${tr.end}`.toLowerCase().replace(/[^a-z0-9_-]+/g, "_"),
-      rows: filtered.map(item => ({ month: current, ...item }))
-    };
+  let sIso = reportStartDate || todayIso;
+  let eIso = reportEndDate || todayIso;
+  if (sIso > eIso) {
+    const tmp = sIso;
+    sIso = eIso;
+    eIso = tmp;
   }
 
-  if (reportScope === "days") {
-    const start = clampDay(reportStartDay, 1);
-    const end = clampDay(reportEndDay, 31);
-    const filtered = filterByDayRange(getList(current), start, end);
-    const rangeText = start === end ? `Dia ${start}` : `Dias ${start} a ${end}`;
-    return {
-      label: `${current} (${rangeText})`,
-      fileSlug: `${current}_${start}-${end}`.toLowerCase().replace(/[^a-z0-9_-]+/g, "_"),
-      rows: filtered.map(item => ({ month: current, ...item }))
-    };
-  }
+  const matched = allRows.filter(row => {
+    if (row.isoDate) {
+      return row.isoDate >= sIso && row.isoDate <= eIso;
+    }
+    return false;
+  });
 
   return {
-    label: current,
-    fileSlug: current.toLowerCase().replace(/[^a-z0-9_-]+/g, "_"),
-    rows: sortedList(current).map(item => ({ month: current, ...item }))
+    label: `${formatBrDate(sIso)} até ${formatBrDate(eIso)}`,
+    fileSlug: `${sIso}_a_${eIso}`,
+    rows: matched
   };
 }
 
@@ -410,6 +697,7 @@ function renderTabs() {
     b.onclick = () => {
       current = m;
       editing = null;
+      inspectedDay = null;
       resetForm();
       daySelected = 1;
       $("selectedDay").value = 1;
@@ -463,10 +751,10 @@ function entryCardHTML(x, opts = {}) {
   return `<article class="entry">
     <div class="entrytop"><strong>${title}</strong>${tools}</div>
     <div class="entrygrid">
-      <div class="metric ${tone(x.fasting)}"><small>Jejum</small><b>${val(x.fasting)}</b></div>
-      <div class="metric"><small>Dose manhã</small><b>${val(x.doseAm)}</b></div>
-      <div class="metric ${tone(x.night)}"><small>Noite</small><b>${val(x.night)}</b></div>
-      <div class="metric"><small>Dose noite</small><b>${val(x.dosePm)}</b></div>
+      <div class="metric ${tone(x.fasting)}"><small>Jejum</small><b class="mono">${val(x.fasting)}</b></div>
+      <div class="metric"><small>Dose manhã</small><b class="mono">${val(x.doseAm)}</b></div>
+      <div class="metric ${tone(x.night)}"><small>Noite</small><b class="mono">${val(x.night)}</b></div>
+      <div class="metric"><small>Dose noite</small><b class="mono">${val(x.dosePm)}</b></div>
     </div>
     ${x.notes ? `<div class="note">${esc(x.notes)}</div>` : ""}
   </article>`;
@@ -491,7 +779,7 @@ function renderEntries() {
 
   l.forEach(x => {
     const wrap = document.createElement("div");
-    wrap.innerHTML = entryCardHTML(x, { isDaily: false, showMonth: useReportSlice && reportScope === "all" });
+    wrap.innerHTML = entryCardHTML(x, { isDaily: false, showMonth: useReportSlice });
     host.appendChild(wrap.firstElementChild);
   });
 
@@ -502,9 +790,7 @@ function renderEntries() {
   host.querySelectorAll("[data-del]").forEach(b => {
     b.onclick = () => {
       if (confirm("Excluir este registro?")) {
-        const targetMonth = useReportSlice && reportScope === "all"
-          ? months.find(m => getList(m).some(item => item.id === b.dataset.del)) || current
-          : current;
+        const targetMonth = months.find(m => getList(m).some(item => item.id === b.dataset.del)) || current;
         store[targetMonth] = getList(targetMonth).filter(x => x.id !== b.dataset.del);
         persist();
         render();
@@ -514,16 +800,8 @@ function renderEntries() {
 }
 
 function renderReportControls() {
-  const isTen = reportScope === "ten";
-  const isDays = reportScope === "days";
-  $("reportScope").value = reportScope;
-  $("tenBlockBox").classList.toggle("hidden", !isTen);
-  $("nextTenBtn").classList.toggle("hidden", !isTen);
-  $("startDayBox").classList.toggle("hidden", !isDays);
-  $("endDayBox").classList.toggle("hidden", !isDays);
-  $("tenBlockSelect").value = String(tenBlock);
-  $("reportStartDay").value = reportStartDay;
-  $("reportEndDay").value = reportEndDay;
+  $("startDate").value = reportStartDate;
+  $("endDate").value = reportEndDate;
 
   const sel = getReportSelection();
   const m = measurementsFrom(sel.rows);
@@ -532,10 +810,10 @@ function renderReportControls() {
   const avg = a => a.length ? (a.reduce((s, x) => s + x, 0) / a.length).toFixed(1) : "—";
 
   $("reportSummary").innerHTML =
-    `<b>Período selecionado:</b> ${esc(sel.label)} · ` +
-    `<b>${sel.rows.length}</b> dia(s) · ` +
+    `<b>Período:</b> ${esc(sel.label)} · ` +
+    `<b>${sel.rows.length}</b> registro(s) · ` +
     `<b>${m.length}</b> medição(ões) ` +
-    `(Média jejum: <b>${avg(f)}</b> · Média noite: <b>${avg(n)}</b>)`;
+    `(Média jejum: <b class="mono">${avg(f)}</b> · Média noite: <b class="mono">${avg(n)}</b>)`;
 
   $("printBanner").innerHTML =
     `<b>Relatório de Glicemia</b> — Período: ${esc(sel.label)} · ` +
@@ -554,12 +832,56 @@ function renderDay() {
   $("dayEdit").onclick = () => editEntry(x.id);
 }
 
+function drawSmoothLine(ctx, pts, px, py, field) {
+  if (!pts.length) return;
+  if (pts.length === 1) {
+    ctx.beginPath();
+    ctx.arc(px(Number(pts[0].day)), py(Number(pts[0][field])), 4, 0, Math.PI * 2);
+    ctx.fill();
+    return;
+  }
+  ctx.beginPath();
+  const firstX = px(Number(pts[0].day));
+  const firstY = py(Number(pts[0][field]));
+  ctx.moveTo(firstX, firstY);
+
+  for (let i = 0; i < pts.length - 1; i++) {
+    const x0 = px(Number(pts[i].day));
+    const y0 = py(Number(pts[i][field]));
+    const x1 = px(Number(pts[i + 1].day));
+    const y1 = py(Number(pts[i + 1][field]));
+    const midX = (x0 + x1) / 2;
+    const midY = (y0 + y1) / 2;
+    ctx.quadraticCurveTo(x0, y0, midX, midY);
+  }
+
+  const last = pts[pts.length - 1];
+  ctx.lineTo(px(Number(last.day)), py(Number(last[field])));
+  ctx.stroke();
+
+  pts.forEach(x => {
+    const cx = px(Number(x.day));
+    const cy = py(Number(x[field]));
+    const isInspected = inspectedDay !== null && Number(x.day) === Number(inspectedDay);
+    ctx.beginPath();
+    ctx.arc(cx, cy, isInspected ? 5.5 : 3.8, 0, Math.PI * 2);
+    ctx.fill();
+    if (isInspected) {
+      ctx.save();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
+  });
+}
+
 function renderChart() {
   const c = $("chart");
   const dpr = window.devicePixelRatio || 1;
   const rect = c.getBoundingClientRect();
   const cssW = Math.max(280, Math.floor(rect.width || 700));
-  const cssH = 220;
+  const cssH = 224;
 
   if (c.width !== cssW * dpr || c.height !== cssH * dpr) {
     c.width = cssW * dpr;
@@ -572,66 +894,105 @@ function renderChart() {
 
   const vals = measurements();
   const maxDay = Math.max(31, ...vals.map(x => x.day));
-  const pad = { l: 38, r: 12, t: 16, b: 28 };
+  const pad = { l: 40, r: 12, t: 16, b: 28 };
   const yMin = 50, yMax = 250;
   const px = d => pad.l + (d - 1) / Math.max(1, maxDay - 1) * (cssW - pad.l - pad.r);
   const py = v => pad.t + (yMax - v) / (yMax - yMin) * (cssH - pad.t - pad.b);
 
-  ctx.font = "11px system-ui";
+  ctx.font = '600 11px "Plus Jakarta Sans", system-ui, sans-serif';
   ctx.lineWidth = 1;
 
-  ctx.fillStyle = "#e3f3e8";
+  ctx.fillStyle = "rgba(35, 136, 89, 0.12)";
   ctx.fillRect(pad.l, py(150), cssW - pad.l - pad.r, py(90) - py(150));
+
+  if (inspectedDay !== null) {
+    const ix = px(inspectedDay);
+    ctx.save();
+    ctx.strokeStyle = "rgba(24, 78, 64, 0.35)";
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(ix, pad.t);
+    ctx.lineTo(ix, cssH - pad.b);
+    ctx.stroke();
+    ctx.restore();
+  }
 
   [50, 90, 150, 200, 250].forEach(v => {
     const y = py(v);
-    ctx.strokeStyle = v === 90 || v === 150 ? "#b8d8c4" : "#e2e9e5";
+    ctx.strokeStyle = v === 90 || v === 150 ? "rgba(35, 136, 89, 0.32)" : "#e3ece7";
     ctx.beginPath();
     ctx.moveTo(pad.l, y);
     ctx.lineTo(cssW - pad.r, y);
     ctx.stroke();
 
-    ctx.fillStyle = "#65756f";
+    ctx.fillStyle = v === 90 || v === 150 ? "#196b45" : "#64766f";
     ctx.fillText(v, 4, y + 4);
   });
 
   [1, 5, 10, 15, 20, 25, 31].forEach(d => {
     if (d > maxDay) return;
     const x = px(d);
-    ctx.fillStyle = "#65756f";
+    ctx.fillStyle = inspectedDay === d ? "#184e40" : "#64766f";
     ctx.fillText(d, x - 4, cssH - 8);
   });
 
-  [["fasting", "#2e8067"], ["night", "#3678b8"]].forEach(([field, color]) => {
+  [["fasting", "#256f5b"], ["night", "#2563eb"]].forEach(([field, color]) => {
     const pts = getList()
       .filter(x => hasNum(x[field]))
       .sort((a, b) => Number(a.day) - Number(b.day));
 
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    pts.forEach((x, i) => {
-      const xx = px(Number(x.day));
-      const yy = py(Number(x[field]));
-      if (i === 0) ctx.moveTo(xx, yy);
-      else ctx.lineTo(xx, yy);
-    });
-    ctx.stroke();
-
-    pts.forEach(x => {
-      ctx.beginPath();
-      ctx.arc(px(Number(x.day)), py(Number(x[field])), 3.5, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    ctx.lineWidth = 2.4;
+    drawSmoothLine(ctx, pts, px, py, field);
   });
 
   if (!vals.length) {
-    ctx.fillStyle = "#65756f";
+    ctx.fillStyle = "#64766f";
     ctx.textAlign = "center";
     ctx.fillText("Adicione medições para visualizar a evolução", cssW / 2, cssH / 2);
     ctx.textAlign = "left";
+    $("chartInspect").innerHTML = '<span>Sem medições neste mês para exibir no gráfico.</span>';
+    return;
   }
+
+  if (inspectedDay !== null) {
+    const item = getList().find(x => Number(x.day) === Number(inspectedDay));
+    if (item) {
+      const fTxt = hasNum(item.fasting) ? `${item.fasting} mg/dL` : "—";
+      const nTxt = hasNum(item.night) ? `${item.night} mg/dL` : "—";
+      $("chartInspect").innerHTML =
+        `<span><b>Dia ${item.day}</b>${item.label ? " · " + esc(item.label) : ""}</span>` +
+        `<span class="mono">Jejum: <b>${fTxt}</b> · Noite: <b>${nTxt}</b></span>`;
+    }
+  } else {
+    $("chartInspect").innerHTML = '<span>Toque ou passe o cursor no gráfico para ver os valores do dia.</span>';
+  }
+}
+
+function inspectAtClientX(clientX) {
+  const c = $("chart");
+  const rect = c.getBoundingClientRect();
+  const cssW = Math.max(280, Math.floor(rect.width || 700));
+  const pad = { l: 40, r: 12 };
+  const vals = measurements();
+  if (!vals.length) return;
+  const maxDay = Math.max(31, ...vals.map(x => x.day));
+  const relX = clientX - rect.left;
+  const ratio = (relX - pad.l) / Math.max(1, cssW - pad.l - pad.r);
+  const approxDay = Math.round(1 + ratio * (maxDay - 1));
+  const candidates = getList()
+    .filter(x => hasNum(x.fasting) || hasNum(x.night))
+    .map(x => Number(x.day));
+  if (!candidates.length) return;
+  let closest = candidates[0];
+  let bestDist = Math.abs(closest - approxDay);
+  candidates.forEach(d => {
+    const dist = Math.abs(d - approxDay);
+    if (dist < bestDist) { bestDist = dist; closest = d; }
+  });
+  inspectedDay = closest;
+  renderChart();
 }
 
 function render() {
@@ -678,6 +1039,14 @@ function editEntry(id) {
   $("formCard").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+$("chart").addEventListener("mousemove", e => inspectAtClientX(e.clientX));
+$("chart").addEventListener("touchstart", e => {
+  if (e.touches && e.touches[0]) inspectAtClientX(e.touches[0].clientX);
+}, { passive: true });
+$("chart").addEventListener("touchmove", e => {
+  if (e.touches && e.touches[0]) inspectAtClientX(e.touches[0].clientX);
+}, { passive: true });
+
 $("monthViewBtn").onclick = () => { view = "month"; render(); };
 $("dayViewBtn").onclick = () => { view = "day"; render(); };
 $("selectedDay").onchange = () => {
@@ -688,34 +1057,35 @@ $("prevDay").onclick = () => { daySelected = Math.max(1, daySelected - 1); rende
 $("nextDay").onclick = () => { daySelected = Math.min(31, daySelected + 1); renderDay(); };
 $("cancelEdit").onclick = resetForm;
 
-$("reportScope").onchange = () => {
-  reportScope = $("reportScope").value;
-  reportOverrideActive = false;
-  renderReportControls();
-  renderEntries();
+$("startDate").onchange = () => {
+  if ($("startDate").value) {
+    reportStartDate = $("startDate").value;
+    filterByDateActive = true;
+    renderReportControls();
+    if (reportOverrideActive) renderEntries();
+  }
 };
 
-$("tenBlockSelect").onchange = () => {
-  tenBlock = Math.min(3, Math.max(1, Number($("tenBlockSelect").value) || 1));
+$("endDate").onchange = () => {
+  if ($("endDate").value) {
+    reportEndDate = $("endDate").value;
+    filterByDateActive = true;
+    renderReportControls();
+    if (reportOverrideActive) renderEntries();
+  }
+};
+
+$("tenDaysBtn").onclick = () => {
+  const base = reportStartDate || todayIso;
+  reportStartDate = base;
+  reportEndDate = addDaysIso(base, 9);
+  filterByDateActive = true;
   renderReportControls();
   if (reportOverrideActive) renderEntries();
 };
 
-$("nextTenBtn").onclick = () => {
-  reportScope = "ten";
-  tenBlock = tenBlock >= 3 ? 1 : tenBlock + 1;
-  renderReportControls();
-  if (reportOverrideActive) renderEntries();
-};
-
-$("reportStartDay").onchange = () => {
-  reportStartDay = clampDay($("reportStartDay").value, 1);
-  renderReportControls();
-  if (reportOverrideActive) renderEntries();
-};
-
-$("reportEndDay").onchange = () => {
-  reportEndDay = clampDay($("reportEndDay").value, 10);
+$("allDatesBtn").onclick = () => {
+  filterByDateActive = false;
   renderReportControls();
   if (reportOverrideActive) renderEntries();
 };
@@ -747,6 +1117,7 @@ $("entryForm").onsubmit = e => {
   }
 
   daySelected = entry.day;
+  inspectedDay = entry.day;
   persist();
   resetForm();
   render();
